@@ -1,0 +1,141 @@
+/****** Script for SelectTopNRows command from SSMS  ******/
+
+
+select 
+M_FP, M_BODR, M_30, M_60, M_90, M_100, Milestone, Milestone_Date, Next_Milestone, Next_Milestone_Date, b.[Project_ID],[Project_Name],b.[P6_Status], Current_Stage,b.[Status],b.[Plan_Year],b.[Budget],b.[Design_Stage],b.[Start_Date],b.[Achievable],b.[Approval_Status],b.[Reviewed_By],b.[DEP_Estimate],b.[Estimate],b.[Date_Received],b.[Date_Completed], Accountable_Design_Manager 
+from 
+(
+select 
+	case
+		when Milestone = 'NTP' then [NTP]
+		when Milestone = 'FD_Completed' then [Final_Design_Completed]
+		when Milestone = '90%' then [90%_Design]
+		when Milestone = '60%' then [60%_Design]
+		when Milestone = '30%' then [30%_Design]
+		when Milestone = 'BODR' then [BODR]
+		when Milestone = 'DS' then [Design_Start]
+		when Milestone = 'FP' then [FP_Start]
+		else ''
+	end as Milestone_Date,
+	
+	case
+		when Milestone = 'FD_Completed' then [NTP]
+		when Milestone = '90%' then [Final_Design_Completed]
+		when Milestone = '60%' and [90%_Design] = '' then [Final_Design_Completed]
+		when Milestone = '60%' then [90%_Design]
+		when Milestone = '30%' and [60%_Design] = '' then [Final_Design_Completed]
+		when Milestone = '30%' then [60%_Design]
+		when Milestone = 'BODR' and [30%_Design] = '' then [Final_Design_Completed]
+		when Milestone = 'BODR' then [30%_Design]
+		when Milestone = 'DS' then [Final_Design_Completed]
+		when Milestone = 'FP' then [BODR]
+		else ''
+	end as Next_Milestone_Date, 
+	
+			case
+		when Milestone = 'FD_Completed' then 'NTP'
+		when Milestone = '90%' then 'FD_Completed'
+		when Milestone = '60%' and [90%_Design] = '' then 'FD_Completed'
+		when Milestone = '60%' then '90%'
+		when Milestone = '30%' and [60%_Design] = '' then 'FD_Completed'
+		when Milestone = '30%' then '60%'
+		when Milestone = 'BODR' and [30%_Design] = '' then 'FD_Completed'
+		when Milestone = 'BODR' then '30%'
+		when Milestone = 'DS' then 'FD_Completed'
+		when Milestone = 'FP' then 'BODR'
+		else ''
+	  end as Next_Milestone
+
+,*
+from
+  (
+	  select 
+		case
+		when [NTP_Status] = '(A)' then 'NTP'
+		when [FD_Completed_Status] = '(A)' then 'FD_Completed'
+		when [90%Design_Status] = '(A)' then '90%'
+		when [60%Design_Status] = '(A)' then '60%'
+		when [30%Design_Status] = '(A)' then '30%'
+		when [BODR_Status] = '(A)' then 'BODR'
+		when [FP_Start_Status] = '(A)' then 'FP'
+		else ''
+	  end as Milestone
+	  ,*
+
+	  from P6_Historical_Trend
+	  where P6_Orig_Proj_id is null 
+	  And [Operating_Bureau] = 'BEDC'
+	  And Current_Status = 'Active' 
+	  And (Current_Stage = 'P' Or Current_Stage = 'Des' Or Current_Stage = 'DesPro')
+	  AND Data_Period = (SELECT max(Data_Period) as Latest_Data_Period FROM P6_Historical_Trend)
+  
+    ) as inner_table
+    
+    
+
+) as outer_table left join 
+(
+	SELECT 
+		dbo.CheckEstimateReportReceived([Cost_Estimate].[Project_ID], 'Conceptual') as M_FP,
+		dbo.CheckEstimateReportReceived([Cost_Estimate].[Project_ID], 'BODR') as M_BODR,
+		dbo.CheckEstimateReportReceived([Cost_Estimate].[Project_ID], '30%') as M_30,	
+		dbo.CheckEstimateReportReceived([Cost_Estimate].[Project_ID], '60%') as M_60,	
+		dbo.CheckEstimateReportReceived([Cost_Estimate].[Project_ID], '90%') as M_90,	
+		dbo.CheckEstimateReportReceived([Cost_Estimate].[Project_ID], '100%') as M_100,
+		case
+			when [Design_Stage] = 'Conceptual' and ([DEP_Estimate] is not null or [Estimate] is not null) then 'X'
+			else ''
+		end as FP1,
+		case
+			when [Design_Stage] = 'BODR' and ([DEP_Estimate] is not null or [Estimate] is not null) then 'X'
+			else ''
+		end as BODR1,
+		case
+			when [Design_Stage] = '30%' and ([DEP_Estimate] is not null or [Estimate] is not null) then 'X'
+			else ''
+		end as '30%1',	
+		case
+			when [Design_Stage] = '60%' and ([DEP_Estimate] is not null or [Estimate] is not null) then 'X'
+			else ''
+		end as '60%1',
+		case
+			when [Design_Stage] = '90%' and ([DEP_Estimate] is not null or [Estimate] is not null) then 'X'
+			else ''
+		end as '90%1',
+		case
+			when [Design_Stage] = '100%' and ([DEP_Estimate] is not null or [Estimate] is not null) then 'X'
+			else ''
+		end as '100%1',
+		
+		bud as Budget,
+		p_status as [Status],
+			case
+				when [DEP_Estimate] is not null or [Estimate] is not null then 'Y'
+				else 'N'
+			end as Received
+		  ,[Cost_Estimate].[Project_ID]
+		  ,[P6_Status]
+		  ,[Plan_Year]
+		  ,[Design_Stage]
+		  ,[Start_Date]
+		  ,[Achievable]
+		  ,[Approval_Status]
+		  ,[Reviewed_By]
+		  ,[DEP_Estimate]
+		  ,[Estimate]
+		  ,[Date_Received]
+		  ,[Date_Completed]
+	  FROM [ProjectControl].[dbo].[Cost_Estimate]
+
+	, (
+	SELECT max([Budget]) as bud, max(status) as p_status, [Project_ID]
+
+	  FROM [ProjectControl].[dbo].[Cost_Estimate]
+
+	group by [Project_ID]
+	) as temp
+	where [Cost_Estimate].[Project_ID]=temp.[Project_ID]
+) as b  on outer_table.[Project_ID]= b.[Project_ID] 
+where outer_table.Milestone = b.[Design_Stage]
+
+--group by b.[Project_ID], b.Design_Stage

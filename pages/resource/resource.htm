@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>
+      Google Visualization API
+    </title>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load('visualization', '1', {packages: ['corechart']});
+    </script>
+
+
+
+
+
+
+
+    <script type="text/javascript">
+	function tweakChart() {
+	// This function is called when the chart is ready.
+	// This is where we remove font-style="italic" attributes from the svg:text elements
+	// representing the charts axes.
+	if (document["evaluate"]) {
+		// browser supports DOM3 "evaluate" function for evaluating xpaths
+		var chartDiv = document.getElementById("chart_div");
+		var iframe = chartDiv.firstChild;
+		var frameDocument = (iframe.contentWindow || iframe.contentDocument).document;
+		var nsResolver = document.createNSResolver( contextNode.ownerDocument == null ? contextNode.documentElement : contextNode.ownerDocument.documentElement );  
+		var italicElements = frameDocument.evaluate(".//*[@font-style='italic']", frameDocument, nsResolver, 4, null);
+		var axis1 = italicElements.iterateNext();
+		var axis2 = italicElements.iterateNext();
+		if (axis1) {
+			axis1.removeAttribute("font-style");
+		}
+		if (axis2) {
+			axis2.removeAttribute("font-style");
+		}
+	}
+}
+      function drawVisualization() {
+        // Some raw data (not necessarily accurate)
+        var data = google.visualization.arrayToDataTable([
+          ['Month', 'Administative Tech', 'Project Manager for Design', 'Project Manager for Construction', 'Associate Project Manager Level 1', 'Associate Project Manager Level 2', 'Associate Project Manager Level 3', 'Manager M Title', 'Portfolio Manager'],
+['FY 2013 Q3', 7.55, 11.7, 28.6, 0.9, 7.3, 9.5, 3.2, 13.35], 
+['FY 2013 Q4', 8.05, 10.2, 27.8, 0.6, 7.15, 8.9, 3.2, 12.95], 
+['FY 2014 Q1', 8.8, 8.55, 24.35, 0.6, 6.25, 8.45, 2.7, 11.95], 
+['FY 2014 Q2', 9.55, 7.65, 20.25, 0.6, 6.05, 6.65, 2.7, 11.05], 
+['FY 2014 Q3', 10.8, 7.0, 21.9, 0.6, 5.55, 7.7, 2.3, 11.25], 
+['FY 2014 Q4', 11.55, 6.15, 19.25, 0.6, 5.6, 7.0, 1.8, 10.65], 
+['FY 2015 Q1', 12.05, 6.25, 20.05, 0.6, 5.6, 7.4, 1.8, 10.85], 
+['FY 2015 Q2', 12.55, 6.0, 21.3, 0.6, 5.4, 7.1, 2.3, 10.75], 
+['FY 2015 Q3', 13.05, 5.5, 20.2, 0.6, 5.1, 6.8, 2.3, 10.45], 
+['FY 2015 Q4', 13.05, 5.1, 20.15, 0.6, 5.2, 6.4, 2.3, 10.25]
+         ]);
+
+        var options = {
+		  tooltip: {isHtml: true},
+		  vAxis : {title: "Number of Staff Needed", titleTextStyle: {italic: false, color:'#000000'}},//
+          hAxis: {title: "Fiscal Year", titleTextStyle: {italic: false, color:'#000000'}},
+          seriesType: "bars"
+        };
+CA jobs:
+Tech Yahoo, Software Dev Eng
+Job Number: 1346505
+
+Tech Yahoo, Software Dev Eng
+Job Number: 1247238
+
+Tech Yahoo, Software Dev Eng
+Job Number: 1342181
+
+Tech Yahoo, Service Eng
+Job Number: 1346171
+
+Tech Yahoo, Software Dev Eng
+Job Number: 1346365
+
+Tech Yahoo, Software Dev Eng
+Job Number: 1347887
+		
+var chartDiv = document.getElementById("chart_div");
+var chart = new google.visualization.ComboChart(chartDiv);
+google.visualization.events.addListener(chart, "ready", tweakChart);
+        chart.draw(data, options);
+		
+      }
+      google.setOnLoadCallback(drawVisualization);
+
+    </script>
+
+  </head>
+  <body>
+    <div style="width: 1200px; height: 50px;font-weight:bold;font-size:30px;margin-left:500px;">Resource Chart</div>
+    <div id="chart_div" style="width: 1200px; height: 600px;margin-top:-20px;"></div>
+  </body>
+</html>

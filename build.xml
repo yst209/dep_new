@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="build">
+
+  <property file="build.properties"/>
+  <property name="src.dir" value="src"/>
+  <property name="build.dir" value="WEB-INF/classes"/>
+	
+  <path id="build.classpath">
+      <fileset dir="WEB-INF/lib">
+          <include name="*.jar"/>
+      </fileset>
+      <!-- servlet API classes: -->
+      <fileset dir="${appserver.lib}">
+          <include name="*.jar"/>
+      </fileset>
+      <pathelement path="${build.dir}"/>
+  </path>		
+	
+
+	
+	
+  <target name="clean" description="Clean output directories">
+      <delete>
+          <fileset dir="${build.dir}">
+              <include name="**/*.class"/>
+          </fileset>
+      </delete>
+  </target>
+
+  <target name="build">
+  	<jar destfile="fasttutorial.war">
+		<fileset dir="." includes="WEB-INF/**/*, pages/**/*"/>
+  	</jar>
+  </target>
+
+  <target name="compile"
+          description="Compile Java sources and copy to WEB-INF/classes dir">
+    <mkdir dir="${build.dir}"/>
+    <javac srcdir="${src.dir}" includeantruntime="false"
+          destdir="${build.dir}" source="1.7" target="1.7" debug="true" deprecation="false" optimize="false" failonerror="true">
+    	<classpath refid="build.classpath"/>
+    </javac>
+    <copy  todir="${build.dir}">
+      <fileset dir="${src.dir}" excludes="**/*.java"/>
+    </copy>
+
+  </target>
+	
+	
+</project>

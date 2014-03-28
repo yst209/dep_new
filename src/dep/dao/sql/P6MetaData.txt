@@ -1,0 +1,26 @@
+SELECT [Project_ID]
+      ,[Operating_Bureau]
+      ,[Bureau]
+      ,[Project_Name]
+      ,[Portfolio_Manager]
+      ,[Accountable_Design_Manager]
+      ,[Accountable_Construction_Manager]
+      ,[Master_Program]
+      ,[Data_Date]
+      ,[Current_Status]
+      ,	case
+		when [Current_Stage] = 'DesPro' then 'Design Procurement'
+		when [Current_Stage] = 'P' then 'Facility Planning'
+		when [Current_Stage] = 'Des' then 'Design'
+		when [Current_Stage] = 'ConPro' then 'Construction Procurement'
+		when [Current_Stage] = 'Con' then 'Construction'
+		when [Current_Stage] = 'SC' then 'Substantial Completion'
+		when [Current_Stage] = 'FC' then 'Final Completion'
+		when [Current_Stage] = 'PM' then 'Project Management'
+		else [Current_Stage]
+	  end as [Current_Stage]
+  FROM [ProjectControl].[dbo].[P6_Historical_Trend]
+  where Data_Period = (SELECT max(Data_Period) as Latest_Data_Period FROM P6_Historical_Trend)
+  and P6_Orig_Proj_id is null 
+  and [Operating_Bureau] = 'BEDC'
+  and [Project_ID] not like 'EE-DSGN%'

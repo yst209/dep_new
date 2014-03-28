@@ -1,0 +1,32 @@
+
+select schedule.Project_ID, schedule.Design_Start as start_date, schedule.[Final_Design_Completed] as finish_date, EAC.EAC
+,	case
+		when EAC.EAC < 20000000 then 1
+		when EAC.EAC < 50000000 then 2
+		when EAC.EAC < 100000000 then 3
+		else 4
+	end as level 
+from 
+( 
+select * 
+from P6_Historical_Trend 
+where P6_Orig_Proj_id is null 
+AND Data_Period = (SELECT max(Data_Period) as Latest_Data_Period FROM P6_Historical_Trend) 
+AND Current_Status != 'On-Hold' and  Current_Status != 'Cancelled' 
+AND (P6_Historical_Trend.[Operating_Bureau] = 'BEDC' ) 
+AND convert(datetime, [Design_Start], 101) < @month 
+AND convert(datetime, [Final_Design_Completed], 101) > @month 
+AND ('BEDC' = '@masterProgram' OR Master_Program = '@masterProgram') 
+) as schedule, 
+( 
+  SELECT Project, SUM(value) as EAC 
+  FROM [ProjectControl].[dbo].[Cobra_Historical_Trend] 
+  where [Data_Period] = (SELECT max(Data_Period) as Latest_Data_Period FROM P6_Historical_Trend) 
+  and ([Class] = 'Actual' or [Class] = 'WCNP' or [Class] = 'Forecast' ) 
+  and ContractType = 'K' 
+  @managedBySQL 
+  group by Project 
+) as EAC 
+where schedule.Project_ID = EAC.Project 
+
+order by EAC.EAC, schedule.Project_ID 

@@ -1,0 +1,22 @@
+SELECT data.[Active_Accountable_Manager]
+from
+(
+SELECT [Portfolio_Manager]
+      ,[Accountable_Design_Manager]
+      ,[Accountable_Construction_Manager]
+      ,	case 
+		when NTP_Status = '(A)' then [Accountable_Construction_Manager] 
+		else [Accountable_Design_Manager]
+		end as 'Active_Accountable_Manager'
+  FROM [ProjectControl].[dbo].[P6_Historical_Trend]
+  where P6_Orig_Proj_id is null 
+And Current_Status = 'Active'
+AND Data_Period = (SELECT max(Data_Period) as Latest_Data_Period FROM P6_Historical_Trend)
+AND (P6_Historical_Trend.[Operating_Bureau] = 'BEDC' )
+and [Master_Program] = 'WWC'
+And Project_ID not like 'EE-DSGN%'
+And Project_ID not like 'CTYWDCM%'
+) as data
+
+group by data.[Active_Accountable_Manager]
+order by data.[Active_Accountable_Manager]

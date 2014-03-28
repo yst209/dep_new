@@ -1,0 +1,12 @@
+SELECT [Portfolio_Manager]
+  FROM [ProjectControl].[dbo].[P6_Historical_Trend]
+  where P6_Orig_Proj_id is null 
+And Current_Status = 'Active'
+AND Data_Period = (SELECT max(Data_Period) as Latest_Data_Period FROM P6_Historical_Trend)
+AND (P6_Historical_Trend.[Operating_Bureau] = 'BEDC' )
+and [Master_Program] = 'WWC'
+And Project_ID not like 'EE-DSGN%'
+And Project_ID not like 'CTYWDCM%'
+
+group by [Portfolio_Manager]
+order by [Portfolio_Manager]

@@ -1,0 +1,199 @@
+with IHD as
+(
+SELECT Project
+FROM [ProjectControl].[dbo].[Cobra_Historical_Trend]
+where [Data_Period] = (SELECT max(Data_Period) as Latest_Data_Period FROM P6_Historical_Trend)
+and ContractRegNumber = 'IHD'
+group by Project
+)
+
+, ICM as
+(
+SELECT Project
+FROM [ProjectControl].[dbo].[Cobra_Historical_Trend]
+where [Data_Period] = (SELECT max(Data_Period) as Latest_Data_Period FROM P6_Historical_Trend)
+and ContractRegNumber = 'ICM'
+group by Project
+)
+, P6_info
+as
+(
+
+
+SELECT [Project_ID]
+      ,[Project_Name]
+      ,[Bureau]
+      ,[Operating_Bureau]
+      ,[Master_Program]
+      ,[Current_Status]
+      ,[Current_Stage]
+      ,[Accountable_Design_Manager]
+      ,[Accountable_Construction_Manager]
+      ,[Portfolio_Manager]
+      ,	case 
+		when NTP_Status = '(A)' then [Accountable_Construction_Manager] 
+		else [Accountable_Design_Manager]
+		end as 'Active_Accountable_Manager'
+      ,[FP_Start]
+      ,[BODR]
+      ,[Design_Start]
+      ,[Final_Design_Completed]
+      ,[NTP]
+      ,[Substantial_Completion]
+      ,[Final_Completion]
+      ,[NTP_Status]
+      
+      ,case 
+		when 
+		([NTP_Status] = '(A)' and [Project_ID] in (select Project from IHD))
+		or ([NTP_Status] != '(A)' and [Project_ID] in (select Project from ICM)) then 'IHD&ICM'
+		else 'Consultant'
+		end as 'Inhouse/Consultant'
+      ,	case when convert(datetime, [Final_Completion], 101) < '2013-06-30 23:59:00' then 'SC'  when convert(datetime, [Substantial_Completion], 101) < '2013-06-30 23:59:00' AND convert(datetime, [Final_Completion], 101) > '2013-04-01 00:00:00' then 'SC'  when convert(datetime, [NTP], 101) < '2013-06-30 23:59:00' AND convert(datetime, [Substantial_Completion], 101) > '2013-04-01 00:00:00' then 'CON'  when convert(datetime, [Final_Design_Completed], 101) < '2013-06-30 23:59:00' AND convert(datetime, [NTP], 101) > '2013-04-01 00:00:00' then 'ConPro'  when convert(datetime, [Design_Start], 101) < '2013-06-30 23:59:00' AND convert(datetime, [Final_Design_Completed], 101) > '2013-04-01 00:00:00' then 'DES'  when convert(datetime, [FP_Start], 101) < '2013-06-30 23:59:00' AND convert(datetime, [Design_Start], 101) > '2013-04-01 00:00:00' then 'P'  end as '2013_Q4' 
+      ,	case when convert(datetime, [Final_Completion], 101) < '2013-09-30 23:59:00' then 'SC'  when convert(datetime, [Substantial_Completion], 101) < '2013-09-30 23:59:00' AND convert(datetime, [Final_Completion], 101) > '2013-07-01 00:00:00' then 'SC'  when convert(datetime, [NTP], 101) < '2013-09-30 23:59:00' AND convert(datetime, [Substantial_Completion], 101) > '2013-07-01 00:00:00' then 'CON'  when convert(datetime, [Final_Design_Completed], 101) < '2013-09-30 23:59:00' AND convert(datetime, [NTP], 101) > '2013-07-01 00:00:00' then 'ConPro'  when convert(datetime, [Design_Start], 101) < '2013-09-30 23:59:00' AND convert(datetime, [Final_Design_Completed], 101) > '2013-07-01 00:00:00' then 'DES'  when convert(datetime, [FP_Start], 101) < '2013-09-30 23:59:00' AND convert(datetime, [Design_Start], 101) > '2013-07-01 00:00:00' then 'P'  end as '2014_Q1' 
+      ,	case when convert(datetime, [Final_Completion], 101) < '2013-12-31 23:59:00' then 'SC'  when convert(datetime, [Substantial_Completion], 101) < '2013-12-31 23:59:00' AND convert(datetime, [Final_Completion], 101) > '2013-10-01 00:00:00' then 'SC'  when convert(datetime, [NTP], 101) < '2013-12-31 23:59:00' AND convert(datetime, [Substantial_Completion], 101) > '2013-10-01 00:00:00' then 'CON'  when convert(datetime, [Final_Design_Completed], 101) < '2013-12-31 23:59:00' AND convert(datetime, [NTP], 101) > '2013-10-01 00:00:00' then 'ConPro'  when convert(datetime, [Design_Start], 101) < '2013-12-31 23:59:00' AND convert(datetime, [Final_Design_Completed], 101) > '2013-10-01 00:00:00' then 'DES'  when convert(datetime, [FP_Start], 101) < '2013-12-31 23:59:00' AND convert(datetime, [Design_Start], 101) > '2013-10-01 00:00:00' then 'P'  end as '2014_Q2' 
+      ,	case when convert(datetime, [Final_Completion], 101) < '2014-03-31 23:59:00' then 'SC'  when convert(datetime, [Substantial_Completion], 101) < '2014-03-31 23:59:00' AND convert(datetime, [Final_Completion], 101) > '2014-01-01 00:00:00' then 'SC'  when convert(datetime, [NTP], 101) < '2014-03-31 23:59:00' AND convert(datetime, [Substantial_Completion], 101) > '2014-01-01 00:00:00' then 'CON'  when convert(datetime, [Final_Design_Completed], 101) < '2014-03-31 23:59:00' AND convert(datetime, [NTP], 101) > '2014-01-01 00:00:00' then 'ConPro'  when convert(datetime, [Design_Start], 101) < '2014-03-31 23:59:00' AND convert(datetime, [Final_Design_Completed], 101) > '2014-01-01 00:00:00' then 'DES'  when convert(datetime, [FP_Start], 101) < '2014-03-31 23:59:00' AND convert(datetime, [Design_Start], 101) > '2014-01-01 00:00:00' then 'P'  end as '2014_Q3' 
+      ,	case when convert(datetime, [Final_Completion], 101) < '2014-06-30 23:59:00' then 'SC'  when convert(datetime, [Substantial_Completion], 101) < '2014-06-30 23:59:00' AND convert(datetime, [Final_Completion], 101) > '2014-04-01 00:00:00' then 'SC'  when convert(datetime, [NTP], 101) < '2014-06-30 23:59:00' AND convert(datetime, [Substantial_Completion], 101) > '2014-04-01 00:00:00' then 'CON'  when convert(datetime, [Final_Design_Completed], 101) < '2014-06-30 23:59:00' AND convert(datetime, [NTP], 101) > '2014-04-01 00:00:00' then 'ConPro'  when convert(datetime, [Design_Start], 101) < '2014-06-30 23:59:00' AND convert(datetime, [Final_Design_Completed], 101) > '2014-04-01 00:00:00' then 'DES'  when convert(datetime, [FP_Start], 101) < '2014-06-30 23:59:00' AND convert(datetime, [Design_Start], 101) > '2014-04-01 00:00:00' then 'P'  end as '2014_Q4' 
+      ,	case when convert(datetime, [Final_Completion], 101) < '2014-09-30 23:59:00' then 'SC'  when convert(datetime, [Substantial_Completion], 101) < '2014-09-30 23:59:00' AND convert(datetime, [Final_Completion], 101) > '2014-07-01 00:00:00' then 'SC'  when convert(datetime, [NTP], 101) < '2014-09-30 23:59:00' AND convert(datetime, [Substantial_Completion], 101) > '2014-07-01 00:00:00' then 'CON'  when convert(datetime, [Final_Design_Completed], 101) < '2014-09-30 23:59:00' AND convert(datetime, [NTP], 101) > '2014-07-01 00:00:00' then 'ConPro'  when convert(datetime, [Design_Start], 101) < '2014-09-30 23:59:00' AND convert(datetime, [Final_Design_Completed], 101) > '2014-07-01 00:00:00' then 'DES'  when convert(datetime, [FP_Start], 101) < '2014-09-30 23:59:00' AND convert(datetime, [Design_Start], 101) > '2014-07-01 00:00:00' then 'P'  end as '2015_Q1' 
+      ,	case when convert(datetime, [Final_Completion], 101) < '2014-12-31 23:59:00' then 'SC'  when convert(datetime, [Substantial_Completion], 101) < '2014-12-31 23:59:00' AND convert(datetime, [Final_Completion], 101) > '2014-10-01 00:00:00' then 'SC'  when convert(datetime, [NTP], 101) < '2014-12-31 23:59:00' AND convert(datetime, [Substantial_Completion], 101) > '2014-10-01 00:00:00' then 'CON'  when convert(datetime, [Final_Design_Completed], 101) < '2014-12-31 23:59:00' AND convert(datetime, [NTP], 101) > '2014-10-01 00:00:00' then 'ConPro'  when convert(datetime, [Design_Start], 101) < '2014-12-31 23:59:00' AND convert(datetime, [Final_Design_Completed], 101) > '2014-10-01 00:00:00' then 'DES'  when convert(datetime, [FP_Start], 101) < '2014-12-31 23:59:00' AND convert(datetime, [Design_Start], 101) > '2014-10-01 00:00:00' then 'P'  end as '2015_Q2' 
+      ,	case when convert(datetime, [Final_Completion], 101) < '2015-03-31 23:59:00' then 'SC'  when convert(datetime, [Substantial_Completion], 101) < '2015-03-31 23:59:00' AND convert(datetime, [Final_Completion], 101) > '2015-01-01 00:00:00' then 'SC'  when convert(datetime, [NTP], 101) < '2015-03-31 23:59:00' AND convert(datetime, [Substantial_Completion], 101) > '2015-01-01 00:00:00' then 'CON'  when convert(datetime, [Final_Design_Completed], 101) < '2015-03-31 23:59:00' AND convert(datetime, [NTP], 101) > '2015-01-01 00:00:00' then 'ConPro'  when convert(datetime, [Design_Start], 101) < '2015-03-31 23:59:00' AND convert(datetime, [Final_Design_Completed], 101) > '2015-01-01 00:00:00' then 'DES'  when convert(datetime, [FP_Start], 101) < '2015-03-31 23:59:00' AND convert(datetime, [Design_Start], 101) > '2015-01-01 00:00:00' then 'P'  end as '2015_Q3' 
+      ,	case when convert(datetime, [Final_Completion], 101) < '2015-06-30 23:59:00' then 'SC'  when convert(datetime, [Substantial_Completion], 101) < '2015-06-30 23:59:00' AND convert(datetime, [Final_Completion], 101) > '2015-04-01 00:00:00' then 'SC'  when convert(datetime, [NTP], 101) < '2015-06-30 23:59:00' AND convert(datetime, [Substantial_Completion], 101) > '2015-04-01 00:00:00' then 'CON'  when convert(datetime, [Final_Design_Completed], 101) < '2015-06-30 23:59:00' AND convert(datetime, [NTP], 101) > '2015-04-01 00:00:00' then 'ConPro'  when convert(datetime, [Design_Start], 101) < '2015-06-30 23:59:00' AND convert(datetime, [Final_Design_Completed], 101) > '2015-04-01 00:00:00' then 'DES'  when convert(datetime, [FP_Start], 101) < '2015-06-30 23:59:00' AND convert(datetime, [Design_Start], 101) > '2015-04-01 00:00:00' then 'P'  end as '2015_Q4' 
+      ,	case when convert(datetime, [Final_Completion], 101) < '2015-09-30 23:59:00' then 'SC'  when convert(datetime, [Substantial_Completion], 101) < '2015-09-30 23:59:00' AND convert(datetime, [Final_Completion], 101) > '2015-07-01 00:00:00' then 'SC'  when convert(datetime, [NTP], 101) < '2015-09-30 23:59:00' AND convert(datetime, [Substantial_Completion], 101) > '2015-07-01 00:00:00' then 'CON'  when convert(datetime, [Final_Design_Completed], 101) < '2015-09-30 23:59:00' AND convert(datetime, [NTP], 101) > '2015-07-01 00:00:00' then 'ConPro'  when convert(datetime, [Design_Start], 101) < '2015-09-30 23:59:00' AND convert(datetime, [Final_Design_Completed], 101) > '2015-07-01 00:00:00' then 'DES'  when convert(datetime, [FP_Start], 101) < '2015-09-30 23:59:00' AND convert(datetime, [Design_Start], 101) > '2015-07-01 00:00:00' then 'P'  end as '2016_Q1' 
+      ,	case when convert(datetime, [Final_Completion], 101) < '2015-12-31 23:59:00' then 'SC'  when convert(datetime, [Substantial_Completion], 101) < '2015-12-31 23:59:00' AND convert(datetime, [Final_Completion], 101) > '2015-10-01 00:00:00' then 'SC'  when convert(datetime, [NTP], 101) < '2015-12-31 23:59:00' AND convert(datetime, [Substantial_Completion], 101) > '2015-10-01 00:00:00' then 'CON'  when convert(datetime, [Final_Design_Completed], 101) < '2015-12-31 23:59:00' AND convert(datetime, [NTP], 101) > '2015-10-01 00:00:00' then 'ConPro'  when convert(datetime, [Design_Start], 101) < '2015-12-31 23:59:00' AND convert(datetime, [Final_Design_Completed], 101) > '2015-10-01 00:00:00' then 'DES'  when convert(datetime, [FP_Start], 101) < '2015-12-31 23:59:00' AND convert(datetime, [Design_Start], 101) > '2015-10-01 00:00:00' then 'P'  end as '2016_Q2' 
+      ,	case when convert(datetime, [Final_Completion], 101) < '2016-03-31 23:59:00' then 'SC'  when convert(datetime, [Substantial_Completion], 101) < '2016-03-31 23:59:00' AND convert(datetime, [Final_Completion], 101) > '2016-01-01 00:00:00' then 'SC'  when convert(datetime, [NTP], 101) < '2016-03-31 23:59:00' AND convert(datetime, [Substantial_Completion], 101) > '2016-01-01 00:00:00' then 'CON'  when convert(datetime, [Final_Design_Completed], 101) < '2016-03-31 23:59:00' AND convert(datetime, [NTP], 101) > '2016-01-01 00:00:00' then 'ConPro'  when convert(datetime, [Design_Start], 101) < '2016-03-31 23:59:00' AND convert(datetime, [Final_Design_Completed], 101) > '2016-01-01 00:00:00' then 'DES'  when convert(datetime, [FP_Start], 101) < '2016-03-31 23:59:00' AND convert(datetime, [Design_Start], 101) > '2016-01-01 00:00:00' then 'P'  end as '2016_Q3' 
+      ,	case when convert(datetime, [Final_Completion], 101) < '2016-06-30 23:59:00' then 'SC'  when convert(datetime, [Substantial_Completion], 101) < '2016-06-30 23:59:00' AND convert(datetime, [Final_Completion], 101) > '2016-04-01 00:00:00' then 'SC'  when convert(datetime, [NTP], 101) < '2016-06-30 23:59:00' AND convert(datetime, [Substantial_Completion], 101) > '2016-04-01 00:00:00' then 'CON'  when convert(datetime, [Final_Design_Completed], 101) < '2016-06-30 23:59:00' AND convert(datetime, [NTP], 101) > '2016-04-01 00:00:00' then 'ConPro'  when convert(datetime, [Design_Start], 101) < '2016-06-30 23:59:00' AND convert(datetime, [Final_Design_Completed], 101) > '2016-04-01 00:00:00' then 'DES'  when convert(datetime, [FP_Start], 101) < '2016-06-30 23:59:00' AND convert(datetime, [Design_Start], 101) > '2016-04-01 00:00:00' then 'P'  end as '2016_Q4' 
+      ,	case when convert(datetime, [Final_Completion], 101) < '2016-09-30 23:59:00' then 'SC'  when convert(datetime, [Substantial_Completion], 101) < '2016-09-30 23:59:00' AND convert(datetime, [Final_Completion], 101) > '2016-07-01 00:00:00' then 'SC'  when convert(datetime, [NTP], 101) < '2016-09-30 23:59:00' AND convert(datetime, [Substantial_Completion], 101) > '2016-07-01 00:00:00' then 'CON'  when convert(datetime, [Final_Design_Completed], 101) < '2016-09-30 23:59:00' AND convert(datetime, [NTP], 101) > '2016-07-01 00:00:00' then 'ConPro'  when convert(datetime, [Design_Start], 101) < '2016-09-30 23:59:00' AND convert(datetime, [Final_Design_Completed], 101) > '2016-07-01 00:00:00' then 'DES'  when convert(datetime, [FP_Start], 101) < '2016-09-30 23:59:00' AND convert(datetime, [Design_Start], 101) > '2016-07-01 00:00:00' then 'P'  end as '2017_Q1' 
+      ,	case when convert(datetime, [Final_Completion], 101) < '2016-12-31 23:59:00' then 'SC'  when convert(datetime, [Substantial_Completion], 101) < '2016-12-31 23:59:00' AND convert(datetime, [Final_Completion], 101) > '2016-10-01 00:00:00' then 'SC'  when convert(datetime, [NTP], 101) < '2016-12-31 23:59:00' AND convert(datetime, [Substantial_Completion], 101) > '2016-10-01 00:00:00' then 'CON'  when convert(datetime, [Final_Design_Completed], 101) < '2016-12-31 23:59:00' AND convert(datetime, [NTP], 101) > '2016-10-01 00:00:00' then 'ConPro'  when convert(datetime, [Design_Start], 101) < '2016-12-31 23:59:00' AND convert(datetime, [Final_Design_Completed], 101) > '2016-10-01 00:00:00' then 'DES'  when convert(datetime, [FP_Start], 101) < '2016-12-31 23:59:00' AND convert(datetime, [Design_Start], 101) > '2016-10-01 00:00:00' then 'P'  end as '2017_Q2' 
+      ,	case when convert(datetime, [Final_Completion], 101) < '2017-03-31 23:59:00' then 'SC'  when convert(datetime, [Substantial_Completion], 101) < '2017-03-31 23:59:00' AND convert(datetime, [Final_Completion], 101) > '2017-01-01 00:00:00' then 'SC'  when convert(datetime, [NTP], 101) < '2017-03-31 23:59:00' AND convert(datetime, [Substantial_Completion], 101) > '2017-01-01 00:00:00' then 'CON'  when convert(datetime, [Final_Design_Completed], 101) < '2017-03-31 23:59:00' AND convert(datetime, [NTP], 101) > '2017-01-01 00:00:00' then 'ConPro'  when convert(datetime, [Design_Start], 101) < '2017-03-31 23:59:00' AND convert(datetime, [Final_Design_Completed], 101) > '2017-01-01 00:00:00' then 'DES'  when convert(datetime, [FP_Start], 101) < '2017-03-31 23:59:00' AND convert(datetime, [Design_Start], 101) > '2017-01-01 00:00:00' then 'P'  end as '2017_Q3' 
+      ,	case when convert(datetime, [Final_Completion], 101) < '2017-06-30 23:59:00' then 'SC'  when convert(datetime, [Substantial_Completion], 101) < '2017-06-30 23:59:00' AND convert(datetime, [Final_Completion], 101) > '2017-04-01 00:00:00' then 'SC'  when convert(datetime, [NTP], 101) < '2017-06-30 23:59:00' AND convert(datetime, [Substantial_Completion], 101) > '2017-04-01 00:00:00' then 'CON'  when convert(datetime, [Final_Design_Completed], 101) < '2017-06-30 23:59:00' AND convert(datetime, [NTP], 101) > '2017-04-01 00:00:00' then 'ConPro'  when convert(datetime, [Design_Start], 101) < '2017-06-30 23:59:00' AND convert(datetime, [Final_Design_Completed], 101) > '2017-04-01 00:00:00' then 'DES'  when convert(datetime, [FP_Start], 101) < '2017-06-30 23:59:00' AND convert(datetime, [Design_Start], 101) > '2017-04-01 00:00:00' then 'P'  end as '2017_Q4' 
+      ,	case when convert(datetime, [Final_Completion], 101) < '2017-09-30 23:59:00' then 'SC'  when convert(datetime, [Substantial_Completion], 101) < '2017-09-30 23:59:00' AND convert(datetime, [Final_Completion], 101) > '2017-07-01 00:00:00' then 'SC'  when convert(datetime, [NTP], 101) < '2017-09-30 23:59:00' AND convert(datetime, [Substantial_Completion], 101) > '2017-07-01 00:00:00' then 'CON'  when convert(datetime, [Final_Design_Completed], 101) < '2017-09-30 23:59:00' AND convert(datetime, [NTP], 101) > '2017-07-01 00:00:00' then 'ConPro'  when convert(datetime, [Design_Start], 101) < '2017-09-30 23:59:00' AND convert(datetime, [Final_Design_Completed], 101) > '2017-07-01 00:00:00' then 'DES'  when convert(datetime, [FP_Start], 101) < '2017-09-30 23:59:00' AND convert(datetime, [Design_Start], 101) > '2017-07-01 00:00:00' then 'P'  end as '2018_Q1' 
+      ,	case when convert(datetime, [Final_Completion], 101) < '2017-12-31 23:59:00' then 'SC'  when convert(datetime, [Substantial_Completion], 101) < '2017-12-31 23:59:00' AND convert(datetime, [Final_Completion], 101) > '2017-10-01 00:00:00' then 'SC'  when convert(datetime, [NTP], 101) < '2017-12-31 23:59:00' AND convert(datetime, [Substantial_Completion], 101) > '2017-10-01 00:00:00' then 'CON'  when convert(datetime, [Final_Design_Completed], 101) < '2017-12-31 23:59:00' AND convert(datetime, [NTP], 101) > '2017-10-01 00:00:00' then 'ConPro'  when convert(datetime, [Design_Start], 101) < '2017-12-31 23:59:00' AND convert(datetime, [Final_Design_Completed], 101) > '2017-10-01 00:00:00' then 'DES'  when convert(datetime, [FP_Start], 101) < '2017-12-31 23:59:00' AND convert(datetime, [Design_Start], 101) > '2017-10-01 00:00:00' then 'P'  end as '2018_Q2' 
+      ,	case when convert(datetime, [Final_Completion], 101) < '2018-03-31 23:59:00' then 'SC'  when convert(datetime, [Substantial_Completion], 101) < '2018-03-31 23:59:00' AND convert(datetime, [Final_Completion], 101) > '2018-01-01 00:00:00' then 'SC'  when convert(datetime, [NTP], 101) < '2018-03-31 23:59:00' AND convert(datetime, [Substantial_Completion], 101) > '2018-01-01 00:00:00' then 'CON'  when convert(datetime, [Final_Design_Completed], 101) < '2018-03-31 23:59:00' AND convert(datetime, [NTP], 101) > '2018-01-01 00:00:00' then 'ConPro'  when convert(datetime, [Design_Start], 101) < '2018-03-31 23:59:00' AND convert(datetime, [Final_Design_Completed], 101) > '2018-01-01 00:00:00' then 'DES'  when convert(datetime, [FP_Start], 101) < '2018-03-31 23:59:00' AND convert(datetime, [Design_Start], 101) > '2018-01-01 00:00:00' then 'P'  end as '2018_Q3' 
+      ,	case when convert(datetime, [Final_Completion], 101) < '2018-06-30 23:59:00' then 'SC'  when convert(datetime, [Substantial_Completion], 101) < '2018-06-30 23:59:00' AND convert(datetime, [Final_Completion], 101) > '2018-04-01 00:00:00' then 'SC'  when convert(datetime, [NTP], 101) < '2018-06-30 23:59:00' AND convert(datetime, [Substantial_Completion], 101) > '2018-04-01 00:00:00' then 'CON'  when convert(datetime, [Final_Design_Completed], 101) < '2018-06-30 23:59:00' AND convert(datetime, [NTP], 101) > '2018-04-01 00:00:00' then 'ConPro'  when convert(datetime, [Design_Start], 101) < '2018-06-30 23:59:00' AND convert(datetime, [Final_Design_Completed], 101) > '2018-04-01 00:00:00' then 'DES'  when convert(datetime, [FP_Start], 101) < '2018-06-30 23:59:00' AND convert(datetime, [Design_Start], 101) > '2018-04-01 00:00:00' then 'P'  end as '2018_Q4' 
+
+  FROM [ProjectControl].[dbo].[P6_Historical_Trend]
+where P6_Orig_Proj_id is null 
+And (Current_Status = 'Active' Or Current_Status = 'Future')
+AND Data_Period = (SELECT max(Data_Period) as Latest_Data_Period FROM P6_Historical_Trend)
+AND (P6_Historical_Trend.[Operating_Bureau] = 'BEDC' )
+AND ('BEDC' = 'BEDC' OR Master_Program = 'BEDC') 
+And Project_ID not like 'EE-DSGN%'
+And Project_ID not like 'CTYWDCM%'
+)
+, Staff as 
+(
+  select [Level Type]
+      ,[Level]
+      ,[Staff]
+      ,[Other Name]
+      ,[Rank],
+  'P' as Status,
+  [P] as Staff_Load
+  from [ProjectControl].[dbo].[StaffLevel]
+union
+  select [Level Type]
+      ,[Level]
+      ,[Staff]
+      ,[Other Name]
+      ,[Rank],
+  'Des' as Status,
+  [Des] as Staff_Load
+  from [ProjectControl].[dbo].[StaffLevel]
+union
+  select [Level Type]
+      ,[Level]
+      ,[Staff]
+      ,[Other Name]
+      ,[Rank],
+  'ConPro' as Status,
+  [ConPro] as Staff_Load
+  from [ProjectControl].[dbo].[StaffLevel]
+union
+  select [Level Type]
+      ,[Level]
+      ,[Staff]
+      ,[Other Name]
+      ,[Rank],
+  'Con' as Status,
+  [Con] as Staff_Load
+  from [ProjectControl].[dbo].[StaffLevel]
+union
+  select [Level Type]
+      ,[Level]
+      ,[Staff]
+      ,[Other Name]
+      ,[Rank],
+  'SC' as Status,
+  [SC] as Staff_Load
+  from [ProjectControl].[dbo].[StaffLevel]
+)
+
+
+select *
+
+from
+
+P6_info right join 
+
+( 
+select [Project_ID], '2013_Q4 - ' + P6_info.[2013_Q4] as Fiscal_Year_Status, '2013_Q4' as Fiscal_Year, P6_info.[2013_Q4] as Quarterly_Status from P6_info 
+union 
+ select [Project_ID], '2014_Q1 - ' + P6_info.[2014_Q1], '2014_Q1' as Fiscal_Year, P6_info.[2014_Q1] as Quarterly_Status from P6_info 
+union 
+ select [Project_ID], '2014_Q2 - ' + P6_info.[2014_Q2], '2014_Q2' as Fiscal_Year, P6_info.[2014_Q2] as Quarterly_Status from P6_info 
+union 
+ select [Project_ID], '2014_Q3 - ' + P6_info.[2014_Q3], '2014_Q3' as Fiscal_Year, P6_info.[2014_Q3] as Quarterly_Status from P6_info 
+union 
+ select [Project_ID], '2014_Q4 - ' + P6_info.[2014_Q4], '2014_Q4' as Fiscal_Year, P6_info.[2014_Q4] as Quarterly_Status from P6_info 
+union 
+ select [Project_ID], '2015_Q1 - ' + P6_info.[2015_Q1], '2015_Q1' as Fiscal_Year, P6_info.[2015_Q1] as Quarterly_Status from P6_info 
+union 
+ select [Project_ID], '2015_Q2 - ' + P6_info.[2015_Q2], '2015_Q2' as Fiscal_Year, P6_info.[2015_Q2] as Quarterly_Status from P6_info 
+union 
+ select [Project_ID], '2015_Q3 - ' + P6_info.[2015_Q3], '2015_Q3' as Fiscal_Year, P6_info.[2015_Q3] as Quarterly_Status from P6_info 
+union 
+ select [Project_ID], '2015_Q4 - ' + P6_info.[2015_Q4], '2015_Q4' as Fiscal_Year, P6_info.[2015_Q4] as Quarterly_Status from P6_info 
+union 
+ select [Project_ID], '2016_Q1 - ' + P6_info.[2016_Q1], '2016_Q1' as Fiscal_Year, P6_info.[2016_Q1] as Quarterly_Status from P6_info 
+union 
+ select [Project_ID], '2016_Q2 - ' + P6_info.[2016_Q2], '2016_Q2' as Fiscal_Year, P6_info.[2016_Q2] as Quarterly_Status from P6_info 
+union 
+ select [Project_ID], '2016_Q3 - ' + P6_info.[2016_Q3], '2016_Q3' as Fiscal_Year, P6_info.[2016_Q3] as Quarterly_Status from P6_info 
+union 
+ select [Project_ID], '2016_Q4 - ' + P6_info.[2016_Q4], '2016_Q4' as Fiscal_Year, P6_info.[2016_Q4] as Quarterly_Status from P6_info 
+union 
+ select [Project_ID], '2017_Q1 - ' + P6_info.[2017_Q1], '2017_Q1' as Fiscal_Year, P6_info.[2017_Q1] as Quarterly_Status from P6_info 
+union 
+ select [Project_ID], '2017_Q2 - ' + P6_info.[2017_Q2], '2017_Q2' as Fiscal_Year, P6_info.[2017_Q2] as Quarterly_Status from P6_info 
+union 
+ select [Project_ID], '2017_Q3 - ' + P6_info.[2017_Q3], '2017_Q3' as Fiscal_Year, P6_info.[2017_Q3] as Quarterly_Status from P6_info 
+union 
+ select [Project_ID], '2017_Q4 - ' + P6_info.[2017_Q4], '2017_Q4' as Fiscal_Year, P6_info.[2017_Q4] as Quarterly_Status from P6_info 
+union 
+ select [Project_ID], '2018_Q1 - ' + P6_info.[2018_Q1], '2018_Q1' as Fiscal_Year, P6_info.[2018_Q1] as Quarterly_Status from P6_info 
+union 
+ select [Project_ID], '2018_Q2 - ' + P6_info.[2018_Q2], '2018_Q2' as Fiscal_Year, P6_info.[2018_Q2] as Quarterly_Status from P6_info 
+union 
+ select [Project_ID], '2018_Q3 - ' + P6_info.[2018_Q3], '2018_Q3' as Fiscal_Year, P6_info.[2018_Q3] as Quarterly_Status from P6_info 
+union 
+ select [Project_ID], '2018_Q4 - ' + P6_info.[2018_Q4], '2018_Q4' as Fiscal_Year, P6_info.[2018_Q4] as Quarterly_Status from P6_info
+
+) as FY_table
+on FY_table.[Project_ID] = P6_info.[Project_ID]
+
+left join 
+
+(
+SELECT [Project ID]
+      ,[Final Rating]
+  FROM [ProjectControl].[dbo].[Project_Rating]
+  where [Final Rating] is not null
+) as rating
+on rating.[Project ID] = FY_table.[Project_ID]
+
+
+
+left join Staff on (Staff.[Level Type] = P6_info.[Inhouse/Consultant] and Staff.[Level] = rating.[Final Rating] and Staff.[Status] = Quarterly_Status)
+
+
+order by P6_info.Project_ID, Fiscal_Year, [Rank]

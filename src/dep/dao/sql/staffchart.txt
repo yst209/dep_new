@@ -1,0 +1,141 @@
+with IHD as
+(
+SELECT Project
+FROM [ProjectControl].[dbo].[Cobra_Historical_Trend]
+where [Data_Period] = (SELECT max(Data_Period) as Latest_Data_Period FROM P6_Historical_Trend)
+and ContractRegNumber = 'IHD'
+group by Project
+)
+
+, ICM as
+(
+SELECT Project
+FROM [ProjectControl].[dbo].[Cobra_Historical_Trend]
+where [Data_Period] = (SELECT max(Data_Period) as Latest_Data_Period FROM P6_Historical_Trend)
+and ContractRegNumber = 'ICM'
+group by Project
+)
+, P6_info
+as
+(
+
+
+SELECT [Project_ID]
+      ,[Project_Name]
+      ,[Bureau]
+      ,[Operating_Bureau]
+      ,[Master_Program]
+      ,[Current_Status]
+      ,[Current_Stage]
+      ,[Accountable_Design_Manager]
+      ,[Accountable_Construction_Manager]
+      ,	case 
+		when NTP_Status = '(A)' then [Accountable_Construction_Manager] 
+		else [Accountable_Design_Manager]
+		end as 'Active_Accountable_Manager'
+      ,[FP_Start]
+      ,[BODR]
+      ,[Design_Start]
+      ,[Final_Design_Completed]
+      ,[NTP]
+      ,[Substantial_Completion]
+      ,[Final_Completion]
+      ,[NTP_Status]
+      
+      ,case 
+		when 
+		([NTP_Status] = '(A)' and [Project_ID] in (select Project from IHD))
+		or ([NTP_Status] != '(A)' and [Project_ID] in (select Project from ICM)) then 'IHD&ICM'
+		else 'Consultant'
+		end as 'Inhouse/Consultant'
+		
+	  @quarterString
+  FROM [ProjectControl].[dbo].[P6_Historical_Trend]
+where P6_Orig_Proj_id is null 
+And (Current_Status = 'Active' Or Current_Status = 'Future')
+AND Data_Period = (SELECT max(Data_Period) as Latest_Data_Period FROM P6_Historical_Trend)
+AND (P6_Historical_Trend.[Operating_Bureau] = 'BEDC' )
+--AND ('BEDC' = 'BEDC' OR Master_Program = 'BEDC') 
+And Project_ID not like 'EE-DSGN%'
+And Project_ID not like 'CTYWDCM%'
+)
+, Staff as 
+(
+  select [Level Type]
+      ,[Level]
+      ,[Staff]
+      ,[Other Name]
+      ,[Rank],
+  'P' as Status,
+  [P] as Staff_Load
+  from [ProjectControl].[dbo].[StaffLevel]
+union
+  select [Level Type]
+      ,[Level]
+      ,[Staff]
+      ,[Other Name]
+      ,[Rank],
+  'Des' as Status,
+  [Des] as Staff_Load
+  from [ProjectControl].[dbo].[StaffLevel]
+union
+  select [Level Type]
+      ,[Level]
+      ,[Staff]
+      ,[Other Name]
+      ,[Rank],
+  'ConPro' as Status,
+  [ConPro] as Staff_Load
+  from [ProjectControl].[dbo].[StaffLevel]
+union
+  select [Level Type]
+      ,[Level]
+      ,[Staff]
+      ,[Other Name]
+      ,[Rank],
+  'Con' as Status,
+  [Con] as Staff_Load
+  from [ProjectControl].[dbo].[StaffLevel]
+union
+  select [Level Type]
+      ,[Level]
+      ,[Staff]
+      ,[Other Name]
+      ,[Rank],
+  'SC' as Status,
+  [SC] as Staff_Load
+  from [ProjectControl].[dbo].[StaffLevel]
+)
+
+
+select substring(Fiscal_Year, 0 ,5) as 'Fiscal_Year' , Staff, SUM(Staff_Load)/4 as Total
+
+from
+
+P6_info right join 
+
+(
+
+@union
+
+) as FY_table
+on FY_table.[Project_ID] = P6_info.[Project_ID]
+
+left join 
+
+(
+SELECT [Project ID]
+      ,[Final Rating]
+  FROM [ProjectControl].[dbo].[Project_Rating]
+  where [Final Rating] is not null
+) as rating
+on rating.[Project ID] = FY_table.[Project_ID]
+
+
+
+
+left join Staff on (Staff.[Level Type] = P6_info.[Inhouse/Consultant] and Staff.[Level] = rating.[Final Rating] and Staff.[Status] = Quarterly_Status)
+
+where Staff is not null
+group by Fiscal_Year, Staff, [Rank]
+order by Fiscal_Year, [Rank]

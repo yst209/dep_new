@@ -1,0 +1,201 @@
+select 
+b.[Project] as Project_ID, [Project_Name], SUBSTRING(NTP, 7, 4) as Plan_Year, Current_Stage, b.EEL_Value as Estimate, M_FP, M_BODR, M_30, M_60, M_90, M_100, Milestone, Milestone_Date, Next_Milestone, Next_Milestone_Date, Accountable_Design_Manager 
+from 
+( 
+select 
+	case 
+		when Milestone = 'NTP' then [NTP] 
+		when Milestone = 'FD_Completed' then [Final_Design_Completed] 
+		when Milestone = '90%' then [90%_Design] 
+		when Milestone = '60%' then [60%_Design] 
+		when Milestone = '30%' then [30%_Design] 
+		when Milestone = 'BODR' then [BODR] 
+		when Milestone = 'DS' then [Design_Start] 
+		when Milestone = 'FP' then [FP_Start] 
+		when Milestone = 'DesPro' then [FP_Start] 
+		else '' 
+	end as Milestone_Date, 
+	
+	case 
+		when Milestone = 'FD_Completed' then [NTP] 
+		when Milestone = '90%' then [Final_Design_Completed] 
+		when Milestone = '60%' and [90%_Design] = '' then [Final_Design_Completed] 
+		when Milestone = '60%' then [90%_Design] 
+		when Milestone = '30%' and [60%_Design] = '' then [Final_Design_Completed] 
+		when Milestone = '30%' then [60%_Design] 
+		when Milestone = 'BODR' and [30%_Design] = '' then [Final_Design_Completed] 
+		when Milestone = 'BODR' then [30%_Design] 
+		when Milestone = 'DS' then [Final_Design_Completed] 
+		when Milestone = 'FP' then [BODR] 
+		when Milestone = 'DesPro' then [FP_Start] 
+		else '' 
+	end as Next_Milestone_Date, 
+	
+	case 
+		when Milestone = 'FD_Completed' then 'NTP' 
+		when Milestone = '90%' then 'FD_Completed' 
+		when Milestone = '60%' and [90%_Design] = '' then 'FD_Completed' 
+		when Milestone = '60%' then '90%' 
+		when Milestone = '30%' and [60%_Design] = '' then 'FD_Completed' 
+		when Milestone = '30%' then '60%' 
+		when Milestone = 'BODR' and [30%_Design] = '' then 'FD_Completed' 
+		when Milestone = 'BODR' then '30%' 
+		when Milestone = 'DS' then 'FD_Completed' 
+		when Milestone = 'FP' then 'BODR' 
+		when Milestone = 'DesPro' then 'FP' 
+		else '' 
+	  end as Next_Milestone 
+
+,* 
+from 
+  ( 
+	  select 
+		case 
+		when [NTP_Status] = '(A)' then 'NTP' 
+		when [FD_Completed_Status] = '(A)' then 'FD_Completed' 
+		when [90%Design_Status] = '(A)' then '90%' 
+		when [60%Design_Status] = '(A)' then '60%' 
+		when [30%Design_Status] = '(A)' then '30%' 
+		when [DS_Status] = '(A)' then 'DS' 
+		when [BODR_Status] = '(A)' then 'BODR' 
+		when [FP_Start_Status] = '(A)' then 'FP' 
+		when [Current_Stage] = 'DesPro' then 'DesPro' 
+		else '' 
+	  end as Milestone 
+	  ,* 
+
+	  from P6_Historical_Trend 
+	  where P6_Orig_Proj_id is null 
+	  And [Operating_Bureau] = 'BEDC' 
+	  And Current_Status = 'Active'  
+	  And (Current_Stage = 'DesPro' Or Current_Stage = 'P' Or Current_Stage = 'Des' Or Current_Stage = 'ConPro') 
+	  AND Data_Period = @month 
+  
+    ) as inner_table 
+    
+    
+
+) as outer_table join 
+( 
+
+SELECT EEL_Value, M_FP, M_BODR, M_30, M_60, M_90, M_100, Project 
+FROM 
+( 
+	SELECT 
+		( 
+		SELECT 
+		sum(Value) 
+		FROM [ProjectControl].[dbo].[Cobra_Historical_Trend] 
+		WHERE [Data_Period] = @month 
+		and Project = trend.Project and Class = 'EEL' 
+		) as EEL_Value, 
+		isnull(( 
+		SELECT 
+		case 
+			when Class = 'EEFP' then 'X' 
+		end 
+		FROM [ProjectControl].[dbo].[Cobra_Historical_Trend] 
+		WHERE [Data_Period] = @month 
+		and Project = trend.Project and Class = 'EEFP' 
+		and (ContractRegNumber like '%G' or ContractRegNumber like '%01')
+		), '') as M_FP, 
+		isnull(( 
+		SELECT 
+		case 
+			when Class = 'EEBODR' then 'X' 
+		end 
+		FROM [ProjectControl].[dbo].[Cobra_Historical_Trend] 
+		WHERE [Data_Period] = @month 
+		and Project = trend.Project and Class = 'EEBODR' 
+		and (ContractRegNumber like '%G' or ContractRegNumber like '%01')
+		), '') as M_BODR, 
+		isnull(( 
+		SELECT 
+		case 
+			when Class = 'EE30' then 'X' 
+		end 
+		FROM [ProjectControl].[dbo].[Cobra_Historical_Trend] 
+		WHERE [Data_Period] = @month 
+		and Project = trend.Project and Class = 'EE30' 
+		and (ContractRegNumber like '%G' or ContractRegNumber like '%01')
+		), '') as M_30, 
+		isnull(( 
+		SELECT 
+		case 
+			when Class = 'EE60' then 'X' 
+		end 
+		FROM [ProjectControl].[dbo].[Cobra_Historical_Trend] 
+		WHERE [Data_Period] = @month 
+		and Project = trend.Project and Class = 'EE60' 
+		and (ContractRegNumber like '%G' or ContractRegNumber like '%01')
+		), '') as M_60, 
+		isnull(( 
+		SELECT 
+		case 
+			when Class = 'EE90' then 'X' 
+		end 
+		FROM [ProjectControl].[dbo].[Cobra_Historical_Trend] 
+		WHERE [Data_Period] = @month 
+		and Project = trend.Project and Class = 'EE90' 
+		and (ContractRegNumber like '%G' or ContractRegNumber like '%01')
+		), '') as M_90, 
+		isnull(( 
+		SELECT 
+		case 
+			when Class = 'EE100' then 'X' 
+		end 
+		FROM [ProjectControl].[dbo].[Cobra_Historical_Trend] 
+		WHERE [Data_Period] = @month 
+		and Project = trend.Project and Class = 'EE100' 
+		and (ContractRegNumber like '%G' or ContractRegNumber like '%01')
+		), '') as M_100, 
+	   case 
+			when Class = 'EEFP' then 'X' 
+			else '' 
+		end as M_FP_1, 
+	   case 
+			when Class = 'EEBODR' then 'X' 
+			else '' 
+		end as M_BODR_1, 
+	  case 
+			when Class = 'EE30' then 'X' 
+			else '' 
+		end as M_30_1, 
+	  case 
+			when Class = 'EE60' then 'X' 
+			else '' 
+		end as M_60_1, 
+	  case 
+			when Class = 'EE90' then 'X' 
+			else '' 
+		end as M_90_1, 
+	  case 
+			when Class = 'EE100' then 'X' 
+			else '' 
+		end as M_100_1, 
+
+		* 
+	  FROM [ProjectControl].[dbo].[Cobra_Historical_Trend] as trend 
+	  where [Data_Period] = @month 
+	  and ([Class] like 'EE%' ) and [Class] != 'EEL' 
+) as a 
+group by EEL_Value, M_FP, M_BODR, M_30, M_60, M_90, M_100, Project 
+
+
+) as b  on outer_table.[Project_ID]= b.[Project] 
+
+join 
+( 
+
+SELECT 
+SUM(Value) as Budget, Project 
+FROM [ProjectControl].[dbo].[Cobra_Historical_Trend] as trend 
+where [Data_Period] = @month 
+and Class = 'Budget' and ContractType = 'K' 
+group by Project 
+
+) as c on outer_table.[Project_ID]= c.[Project] 
+
+--where outer_table.Milestone = b.[Design_Stage]
+
+--group by b.[Project_ID], b.Design_Stage

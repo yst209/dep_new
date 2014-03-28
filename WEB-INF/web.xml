@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+         
+<web-app version="3.0"
+		xmlns="http://java.sun.com/xml/ns/javaee"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+		http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" > 
+
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+
+  <servlet>
+    <servlet-name>dep</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>dep</servlet-name>
+    <url-pattern>/</url-pattern>	<!-- http://localhost:8080/dep/trend/ -->
+    <!-- <url-pattern>*.html</url-pattern> --> <!-- http://localhost:8080/dep/trend/trendChart.html Also allow you to access other file types within spring framework -->
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>Faces Servlet</servlet-name>
+    <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>Faces Servlet</servlet-name>
+    <url-pattern>*.jsf</url-pattern>
+  </servlet-mapping>
+  
+	<!-- Serves static resource content from .jar files such as spring-faces.jar -->
+	<servlet>
+	    <servlet-name>Resource Servlet</servlet-name>
+	    <servlet-class>org.springframework.js.resource.ResourceServlet</servlet-class>
+	    <load-on-startup>0</load-on-startup>
+	</servlet>
+	        
+	<!-- Map all /resources requests to the Resource Servlet for handling -->
+	<servlet-mapping>
+	    <servlet-name>Resource Servlet</servlet-name>
+	    <url-pattern>/resources/*</url-pattern>
+	</servlet-mapping>
+  
+  <session-config>
+	<session-timeout>300</session-timeout>
+  </session-config>
+  
+
+  <welcome-file-list>
+    <welcome-file>
+      pages/index.jsp
+    </welcome-file>
+  </welcome-file-list>
+
+</web-app>
