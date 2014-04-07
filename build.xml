@@ -28,9 +28,9 @@
   </target>
 
   <target name="build">
-  	<jar destfile="fasttutorial.war">
+  	<!-- <jar destfile="fasttutorial.war">
 		<fileset dir="." includes="WEB-INF/**/*, pages/**/*"/>
-  	</jar>
+  	</jar> -->
   </target>
 
   <target name="compile"
