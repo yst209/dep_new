@@ -1,0 +1,53 @@
+SELECT A.[Data_Period], EAC, Budget, Current_Contract_Forecast, Adjusted_Contract_Price 
+FROM 
+( 
+SELECT [Data_Period] 
+      ,[ContractType] 
+      ,sum([Value]) as Budget 
+  FROM [ProjectControl].[dbo].[Cobra_Historical_Trend] 
+  where [Project] in ('@projectId') 
+  and [Class] = 'Budget' 
+  and [ContractType] = '@contractType' 
+  
+  group by [Data_Period], [ContractType] 
+) as budget, 
+( 
+SELECT [Data_Period] 
+      ,[ContractType] 
+      ,sum([Value]) as EAC 
+  FROM [ProjectControl].[dbo].[Cobra_Historical_Trend] 
+  where [Project] in ('@projectId') 
+  and ( [Class] = 'Actual' or [Class] = 'WCNP' or [Class] = 'Forecast' ) 
+  and [ContractType] = '@contractType' 
+  
+  group by [Data_Period], [ContractType] 
+) as EAC, 
+
+( 
+SELECT [Data_Period] 
+      ,[ContractType] 
+      ,sum([Value]) as Current_Contract_Forecast 
+  FROM [ProjectControl].[dbo].[Cobra_Historical_Trend] 
+  where [Project] in ('@projectId') 
+  and ( [Class] = 'ORIGCONT' or [Class] = 'RCO' or [Class] = 'PCO' ) 
+  and [ContractType] = '@contractType' 
+   
+  group by [Data_Period], [ContractType] 
+) as C, 
+
+( 
+SELECT [Data_Period] 
+      ,[ContractType] 
+      ,sum([Value]) as Adjusted_Contract_Price 
+  FROM [ProjectControl].[dbo].[Cobra_Historical_Trend] 
+  where [Project] in ('@projectId') 
+  and ( [Class] = 'ORIGCONT' or [Class] = 'RCO' ) 
+  and [ContractType] = '@contractType' 
+   
+  group by [Data_Period], [ContractType] 
+) as A 
+where EAC.[Data_Period] = budget.[Data_Period] 
+and EAC.[Data_Period] = A.[Data_Period] 
+and A.[Data_Period] = C.[Data_Period] 
+and A.[Data_Period] >= 201201 
+order by [Data_Period] 

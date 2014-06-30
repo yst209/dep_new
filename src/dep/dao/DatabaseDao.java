@@ -1,17 +1,10 @@
 package dep.dao;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,17 +20,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import dep.model.CostTrendEntity;
 import dep.model.CobraCostDataEntity;
 import dep.model.EstimateEntity;
 import dep.model.HistoricalTrendEntity;
 import dep.model.HistoricalTrendRowMapper;
 import dep.model.ProjectBureauEntity;
 import dep.model.ProjectBureauRowMapper;
-import dep.model.SCGForm;
 import dep.model.SCGHistoricalTrendEntity;
 import dep.model.SCGLogEntity;
 import dep.model.StaffBarChartEntity;
-import dep.model.StaffloadEntity;
 import dep.model.WorkloadEntity;
 
 @Repository
@@ -830,4 +822,102 @@ public class DatabaseDao implements IDao {
 //			System.out.println("AMList.size(): " + AMList.size());
 			return list;
 		}
+		
+		
+
+		public List<CostTrendEntity> getBudgetContractEAC(String projectId, String contractType) {
+			String SQL="";
+		
+			
+			BufferedReader br;
+			try {
+				br = new BufferedReader(new InputStreamReader(
+					    getClass().getClassLoader().getResourceAsStream(
+					            "dep/dao/sql/BudgetContractEAC.txt")));
+
+			 
+			String line;
+			while( (line = br.readLine()) != null)
+			{
+				SQL+=line;
+//				projectList.add(line);
+			}
+			
+//			System.out.println(projectList);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
+			
+			SQL = SQL.replaceAll("@projectId", projectId);
+			SQL = SQL.replaceAll("@contractType", contractType);
+			
+//			System.out.println("getBudgetContractEAC SQL: " + SQL);
+			
+			
+			List<CostTrendEntity> list = new ArrayList<CostTrendEntity>();
+			
+			List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL);
+			
+			for (Map row : rows) {
+				CostTrendEntity entity = new CostTrendEntity();
+				
+				entity.setDataPeriod(Long.parseLong(row.get("Data_Period").toString().split("\\.")[0]));
+				if(row.get("EAC") != null)
+					entity.setEAC(Long.parseLong(row.get("EAC").toString().split("\\.")[0]));
+				if(row.get("Budget") != null)
+					entity.setBudget(Long.parseLong(row.get("Budget").toString().split("\\.")[0]));
+				if(row.get("Current_Contract_Forecast") != null)
+					entity.setCurrentContractForecast(Long.parseLong(row.get("Current_Contract_Forecast").toString().split("\\.")[0]));
+				if(row.get("Adjusted_Contract_Price") != null)
+					entity.setAdjustedContractPrice(Long.parseLong(row.get("Adjusted_Contract_Price").toString().split("\\.")[0]));
+
+				list.add(entity);
+			}
+			
+			return list;
+		}
+		
+
+		public List<HistoricalTrendEntity> getAllActiveProjects() {
+			String SQL="";
+		
+			
+			BufferedReader br;
+			try {
+				br = new BufferedReader(new InputStreamReader(
+					    getClass().getClassLoader().getResourceAsStream(
+					            "dep/dao/sql/ActiveProjects.txt")));
+
+			 
+			String line;
+			while( (line = br.readLine()) != null)
+			{
+				SQL+=line;
+			}
+			
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+			List<HistoricalTrendEntity> list = new ArrayList<HistoricalTrendEntity>();
+			
+			List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL);
+			
+			for (Map row : rows) {
+				HistoricalTrendEntity entity = new HistoricalTrendEntity();
+				
+				entity.setProjectId((String)(row.get("Project_ID")));
+				entity.setProjectName((String)(row.get("Project_Name")));
+				entity.setPortfolioManager((String)(row.get("Portfolio_Manager")));
+				
+				list.add(entity);
+			}
+			
+			return list;
+		}
+		
+		
 }

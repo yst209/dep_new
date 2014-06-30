@@ -1,0 +1,7 @@
+select [Project_ID], [Project_Name], [Portfolio_Manager]	  
+from P6_Historical_Trend	  
+where P6_Orig_Proj_id is null 	  
+And Current_Status = 'Active'	  
+AND Data_Period = (SELECT max(Data_Period) as Latest_Data_Period FROM P6_Historical_Trend) 
+And Project_ID not like 'EE-DSGN%' 
+And Project_ID not like 'CTYWDCM%' 
