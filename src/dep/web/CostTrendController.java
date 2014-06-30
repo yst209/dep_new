@@ -98,7 +98,7 @@ public class CostTrendController
 		
 	 	contractTypeSelectList = new LinkedHashMap<String,String>();
 	 	contractTypeSelectList.put("D", "Design");
-	 	contractTypeSelectList.put("CM", "CM");
+	 	contractTypeSelectList.put("C", "CM");
 	 	contractTypeSelectList.put("K", "Construction");
 		
 	 	PM_Map = new HashMap<String, ArrayList<String>>();
@@ -170,10 +170,10 @@ public class CostTrendController
 		 	
 		 	List<CostTrendEntity> list = dao.getBudgetContractEAC(projectId, contractType);
 		 	
-		 	for(CostTrendEntity entity : list)
-		 	{
-		 		System.out.println(entity.getDataPeriod() + ", " + entity.getBudget()  + ", " + entity.getEAC()  + ", " + entity.getAdjustedContractPrice()  + ", " + entity.getCurrentContractForecast() );
-		 	}
+//		 	for(CostTrendEntity entity : list)
+//		 	{
+//		 		System.out.println(entity.getDataPeriod() + ", " + entity.getBudget()  + ", " + entity.getEAC()  + ", " + entity.getAdjustedContractPrice()  + ", " + entity.getCurrentContractForecast() );
+//		 	}
 			renderChart(list, 201201L, 201305L);
 			
 			

@@ -160,8 +160,8 @@ public class BatchController
 	
 			dataPeriod = bi.getDatePeriod().toString();
 			coordinator = bi.getCoordinator();
-			dataPeriod = "201207";
-			coordinator = "Vincent";
+//			dataPeriod = "201207";
+//			coordinator = "Vincent";
 			
 	//		if(bi.getSourcePath().endsWith("\\"))
 	//			sourceFolder = bi.getSourcePath().substring(0, bi.getSourcePath().length()-1).replace("\\", "\\\\");
