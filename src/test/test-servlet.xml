@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+ 
+ <context:component-scan base-package="dep.web"/>
+ 
+	<bean
+        class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
+
+    <bean
+        class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
+        
+        
+        <!-- Resolves view names to protected .jsp resources within the /WEB-INF/views directory -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/pages/"/> <!-- <property name="prefix" value="/pages/"/> -->
+		<property name="suffix" value=".jsp"/>
+	</bean>
+	
+
+<bean id="batchValidator" class="dep.web.BatchValidator" />
+<bean id="trendValidator" class="dep.web.TrendValidator" />
+<bean id="costTrendValidator" class="dep.web.CostTrendValidator" />
+<bean id="workloadValidator" class="dep.web.WorkloadValidator" />
+<bean id="staffloadValidator" class="dep.web.StaffloadValidator" />
+<bean id="SCGLogValidator" class="dep.web.SCGLogValidator" />
+<bean id="EstimateValidator" class="dep.web.EstimateValidator" />
+
+
+
+      
+    <!-- Scans within the base package of the application for @Components to configure as beans -->
+    <context:component-scan base-package="org.springframework.docs.test" />
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value=""/>
+        <property name="password" value=""/>
+    </bean>
+
+	<bean id="databaseDao" class="dep.dao.DatabaseDao">
+
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    
+	<context:annotation-config/>
+
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources/ directory -->
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+	<mvc:default-servlet-handler /> <!-- This is required to access other files in /pages/ folder     http://localhost:8080/dep/pages/css/_charts.css-->
+	<!-- JSR-303/JSR-349 support will be detected on classpath and enabled automatically -->
+    <mvc:annotation-driven/>
+    
+    <mvc:view-controller path="/" view-name="index"/>
+    
+	<!-- Configures Handler Interceptors -->	
+	<mvc:interceptors>
+		<!-- Changes the locale when a 'locale' request parameter is sent; e.g. /?locale=de -->
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
+	</mvc:interceptors>
+
+
+    
+	<bean class="org.springframework.js.ajax.AjaxUrlBasedViewResolver">
+	   <property name="viewClass" value="org.springframework.js.ajax.tiles2.AjaxTilesView"/>
+	</bean>    
+
+</beans>
+
+
