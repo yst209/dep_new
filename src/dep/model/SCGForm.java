@@ -24,9 +24,13 @@ public class SCGForm
 	public void sortProjectList() {
 		 Collections.sort(projects, new Comparator<SCGLogEntity>(){
 									 		public int compare(SCGLogEntity a, SCGLogEntity b) {
+									 			
 									 			int result = 0;
-									 			if(a.getStage()==null || a.getStage().equals(""))
+									 			
+									 			if((a.getStage()==null || a.getStage().equals("")) && (b.getStage()==null || b.getStage().equals("")))
 									 				result = 0;
+									 			else if(a.getStage()==null || a.getStage().equals(""))
+									 				result = -1;
 									 			else if(b.getStage()==null || b.getStage().equals(""))
 									 				result = 1;
 									 			else if(!a.getPortfolioManager().equals(b.getPortfolioManager()))
