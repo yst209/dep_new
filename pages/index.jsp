@@ -1,41 +1,21 @@
 <html>
 <head>
-    <meta charset="utf-8" />
-    <title>Demo</title>
+	<title>Project Controls Group Reporting Site</title>
 </head>
+
+
 <body>
-<style>
-a.test {
-    font-weight: bold;
-}
-</style>
-    <a href="http://jquery.com/">jQuery</a>
-    <!-- <script src="pages/resource/jquery-1.10.2.min.js"></script> -->
-    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script>
-    $( "a" ).addClass( "test" );
-    
-    $( "a" ).click(function( event ) {
-    	 
-        event.preventDefault();
-     
-        $( this ).hide( "slow" );
-     
-    });
-    
- 
-    </script>
-    
-    <script type="text/javascript">
- 
-$(document).ready(function(){
- $("#msgid").html("This is Hello World by JQuery");
-});
- 
-</script>
- 
-This is Hello World by HTML
- 
-<div id="msgid">
+<br/>
+
+<center>
+	<h1>Project Controls Group Reporting Site</h1><br/>
+	<h3><a href="/dep/trend">Construction Trend Chart Report</a></h3>
+
+	<h3><a href="/dep/cost_trend">Project Cost Trend Chart Report</a></h3>
+
+	<h3><a href="/dep/workload">Forecast Workload Report</a></h3>
+	
+	<h3><a href="/dep/scg_log">Schedule Control Group Log</a></h3>
+</center>
 </body>
 </html>

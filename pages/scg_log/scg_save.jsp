@@ -6,13 +6,12 @@
 <head>
 	<title>Schedule Control Group Log</title>
 </head>
-<script type="text/javascript"
-	src="<c:url value="/resources/jquery-1.7.js" />"></script>
+<script src="/dep/pages/resource/jquery-1.10.2.min.js"></script>
 <body>
 <center>
 	<br/>
 	<h2>Your changes have been saved successfully.</h2>
-	<a href="/dep/scg_index.html">Back</a><br/>
+	<a href="/dep/scg_log">Back</a><br/>
 	
 </center>
 </body>

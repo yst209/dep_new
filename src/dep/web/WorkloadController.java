@@ -34,6 +34,7 @@ import dep.model.WorkloadEntity;
 import dep.model.WorkloadInfo;
 
 @Controller
+@RequestMapping("/workload/**")
 public class WorkloadController
 {
 	@Autowired
@@ -95,7 +96,7 @@ public class WorkloadController
 		
 	}
 	
-    @RequestMapping(value = "/workload", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public ModelAndView index(HttpServletRequest request,
             HttpServletResponse response) throws Exception {
 		System.out.println("workload index " + new DateTime());
@@ -110,7 +111,7 @@ public class WorkloadController
 //		System.out.println("post SQL: " + SQL);
 		
 		
-		ModelAndView modelAndView = new ModelAndView("workload");
+		ModelAndView modelAndView = new ModelAndView("workload/workload");
 		modelAndView.addObject("workloadInfo", new WorkloadInfo());
 		modelAndView.addObject("stageSelectList", stageSelectList);
 		modelAndView.addObject("masterProgramSelectList", masterProgramSelectList);
@@ -128,7 +129,7 @@ public class WorkloadController
 			System.out.println("errors");
 			
 			generateDropdown();
-			ModelAndView modelAndView = new ModelAndView("workload");
+			ModelAndView modelAndView = new ModelAndView("workload/workload");
 			modelAndView.addObject("workloadInfo", wi);
 			modelAndView.addObject("stageSelectList", stageSelectList);
 			modelAndView.addObject("masterProgramSelectList", masterProgramSelectList);
@@ -228,14 +229,14 @@ public class WorkloadController
 	        
 	        renderChart(workloadLevelOneMap, workloadLevelTwoMap, workloadLevelThreeMap, workloadLevelAllMap);
 			
-			wi.setChart1URL("jsp/getchart.jsp?" + chart1URL);
+			wi.setChart1URL("/dep/pages/getchart.jsp?" + chart1URL);
 			wi.setImageMap(imageMap1);
 			wi.setMap1(workloadLevelOneMap);
 			wi.setMap2(workloadLevelTwoMap);
 			wi.setMap3(workloadLevelThreeMap);
 			wi.setMapAll(workloadLevelAllMap);
 
-			ModelAndView modelAndView = new ModelAndView("workloadResult");
+			ModelAndView modelAndView = new ModelAndView("workload/workloadResult");
 			modelAndView.addObject("workloadInfo", wi);
 			return modelAndView;
 		}

@@ -112,8 +112,6 @@ public class TrendController
         }	
         
         endPeriodSelectList = new LinkedHashMap<Long,String>();
-        endPeriodSelectList.put(201212L, "2012");
-        endPeriodSelectList.put(201312L, "2013");
         endPeriodSelectList.put(201412L, "2014");
         endPeriodSelectList.put(201512L, "2015");
         endPeriodSelectList.put(201612L, "2016");
@@ -131,7 +129,7 @@ public class TrendController
 	@RequestMapping(method=RequestMethod.GET)
     public ModelAndView index(HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-		System.out.println("trendchart index " + new DateTime());
+		System.out.println("trendchart index from IP: " + request.getRemoteHost()+ " at " + new DateTime());
 
 		generateDropdown();
 		ModelAndView modelAndView = new ModelAndView("trend/trendChart"); // /jsp/ trend/trendChart .jsp

@@ -6,8 +6,7 @@
 <head>
 	<title>Schedule Control Group Log</title>
 </head>
-<script type="text/javascript"
-	src="<c:url value="/resources/jquery-1.7.js" />"></script>
+<script src="/dep/pages/resource/jquery-1.10.2.min.js"></script>
 <body>
 <center>
 	<h2>Schedule Control Group Log</h2>
@@ -22,7 +21,7 @@
 	<p>
 		<h3>Report Mode</h3>
 		<!-- note second way of displaying error messages – by field -->
-		<form:form commandName="SCGLogInfo" method="POST" action="scg_submit.html">
+		<form:form commandName="SCGLogInfo" method="POST" action="/dep/scg_log/scg_submit">
 			<table>
 				<tr>
 					<td>
@@ -44,7 +43,7 @@
 	<p>
 		<h3>Edit Mode</h3>
 		<!-- note second way of displaying error messages – by field -->
-		<form:form commandName="SCGLogInfo"  method="POST" action="scg_edit.html">
+		<form:form commandName="SCGLogInfo"  method="POST" action="/dep/scg_log/scg_edit">
 			<table>
 				<tr>
 					<td>

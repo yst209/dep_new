@@ -17,17 +17,16 @@
 <head>
 	<title>Schedule Control Group Log</title>
 </head>
-<script type="text/javascript"
-	src="<c:url value="/resources/jquery-1.7.js" />"></script>
+<script src="/dep/pages/resource/jquery-1.10.2.min.js"></script>
 <body>
 <center>
 	<h2>Update Schedule Control Group Log</h2>
 	<p>
 	
-		<form:form method="post" action="scg_save.html" modelAttribute="scgForm">
+		<form:form method="post" action="/dep/scg_log/scg_save" modelAttribute="scgForm">
 		    <table>
 		    <tr>
-		    	<th>No.<c:out value="xxxx"/></th>
+		    	<th>No.</th>
 		        <th align="left">Project ID</th>
 		        <th align="left">Project Name</th>
 		        <th align="left"><nobr>Portfolio Manager</nobr></th>

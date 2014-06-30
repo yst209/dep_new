@@ -34,6 +34,7 @@ import dep.model.SCGLogEntity;
 import dep.model.SCGLogInfo;
 
 @Controller
+@RequestMapping("/scg_log/**")
 public class SCGLogController
 {
 	@Autowired
@@ -103,13 +104,13 @@ public class SCGLogController
         }
 	}
 
-    @RequestMapping(value = "/scg_index", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public ModelAndView index(HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-		System.out.println("scg_index " + new DateTime());
+		System.out.println("scg index index from IP: " + request.getRemoteHost()+ " at " + new DateTime());
 		
 		generateDropdown();
-		ModelAndView modelAndView = new ModelAndView("scg_index");
+		ModelAndView modelAndView = new ModelAndView("scg_log/scg_index");
 		modelAndView.addObject("SCGLogInfo", new SCGLogInfo());
 		modelAndView.addObject("dataPeriodSelectList", dataPeriodSelectList);
 		return modelAndView;
@@ -124,7 +125,7 @@ public class SCGLogController
 			System.out.println("Valiadtion Errors.");
 			
 			generateDropdown();
-			ModelAndView modelAndView = new ModelAndView("scg_index");
+			ModelAndView modelAndView = new ModelAndView("scg_log/scg_index");
 			modelAndView.addObject("SCGLogInfo", info);
 			modelAndView.addObject("dataPeriodSelectList", dataPeriodSelectList);
 			modelAndView.addObject("errors", result);
@@ -154,7 +155,7 @@ public class SCGLogController
 			
 			form.setProjects(list);
 			form.sortProjectList();
-			ModelAndView modelAndView = new ModelAndView("scg_edit");
+			ModelAndView modelAndView = new ModelAndView("scg_log/scg_edit");
 			modelAndView.addObject("scgForm", form);
 			
 			return modelAndView;
@@ -176,7 +177,7 @@ public class SCGLogController
     	 		dao.updateSCGLog(project);
         }
  
-        return new ModelAndView("scg_save", "scgForm", scgForm);
+        return new ModelAndView("scg_log/scg_save", "scgForm", scgForm);
     }
     
 
@@ -192,7 +193,7 @@ public class SCGLogController
 			System.out.println("Valiadtion Errors.");
 			
 			generateDropdown();
-			ModelAndView modelAndView = new ModelAndView("scg_index");
+			ModelAndView modelAndView = new ModelAndView("scg_log/scg_index");
 			modelAndView.addObject("SCGLogInfo", info);
 			modelAndView.addObject("dataPeriodSelectList", dataPeriodSelectList);
 			modelAndView.addObject("errors", result);

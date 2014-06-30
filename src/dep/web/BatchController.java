@@ -113,20 +113,22 @@ public class BatchController
 		 
         
         coordinatorSelectList = new LinkedHashMap<String,String>();
-        coordinatorSelectList.put("Byron", "Byron");//Back end, Front end
-        coordinatorSelectList.put("Pankaj", "Pankaj");
-        coordinatorSelectList.put("Rolando", "Rolando");
-        coordinatorSelectList.put("Stanley", "Stanley");
+        coordinatorSelectList.put("Alyson", "Alyson");//Back end, Front end
+        coordinatorSelectList.put("Byron", "Byron");
+        coordinatorSelectList.put("Daniel", "Daniel");
+        coordinatorSelectList.put("Frank", "Frank");
+        coordinatorSelectList.put("Rosalina", "Rosalina");
+        coordinatorSelectList.put("Vijaya", "Vijaya");
         coordinatorSelectList.put("Vincent", "Vincent");
 	}
 	
 	@RequestMapping(method=RequestMethod.GET)
     public ModelAndView index(HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-		System.out.println("batch index " + new DateTime());
+		System.out.println("batch index from IP: " + request.getRemoteHost()+ " at " + new DateTime());
 		
 		generateDropdown();
-		ModelAndView modelAndView = new ModelAndView("batch");
+		ModelAndView modelAndView = new ModelAndView("batch/batch");
 		modelAndView.addObject("batchInfo", new BatchInfo());
 		modelAndView.addObject("dataPeriodSelectList", dataPeriodSelectList);
 		modelAndView.addObject("coordinatorSelectList", coordinatorSelectList);
@@ -142,7 +144,7 @@ public class BatchController
 			System.out.println("errors");
 			
 			generateDropdown();
-			ModelAndView modelAndView = new ModelAndView("batch");
+			ModelAndView modelAndView = new ModelAndView("batch/batch");
 			modelAndView.addObject("batchInfo", bi);
 			modelAndView.addObject("dataPeriodSelectList", dataPeriodSelectList);
 			modelAndView.addObject("coordinatorSelectList", coordinatorSelectList);
@@ -229,7 +231,7 @@ public class BatchController
 			bi.setValidatedProjectList(validatedProjectList);
 			bi.setErrorProjectList(errorProjectList);
 			
-			ModelAndView modelAndView = new ModelAndView("batchResult");
+			ModelAndView modelAndView = new ModelAndView("batch/batchResult");
 			modelAndView.addObject("batchInfo", bi);
 			return modelAndView;
 		}

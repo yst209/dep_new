@@ -64,7 +64,7 @@
     </c:choose>
   		    
   	<br/>
-    <a href="/dep/batch.html">Back</a><br/>
+    <a href="/dep/batch">Back</a><br/>
 	
  
  </body>

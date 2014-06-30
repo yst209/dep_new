@@ -140,7 +140,7 @@ window.onload = init;
 
 <input type="hidden" id="cursorX"/>
 <input type="hidden" id="cursorY"/>
-    <a href="/dep/trendChart.html"></a><br/>
+    <a href="/dep/trend"></a><br/>
 	<img src='${trendInfo.chart1URL}' usemap="#map1" style ="border:none;">
 	<map name="map1">${trendInfo.imageMap}</map>
 	<div id="tooltip_123" class="tooltip" />

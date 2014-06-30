@@ -4,15 +4,14 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <html>
 <head>
-	<title>Construction Trend Chart Report</title>
+	<title>Workload Report</title>
 </head>
-<script type="text/javascript"
-	src="<c:url value="/resources/jquery-1.7.js" />"></script>
+<script src="/dep/pages/resource/jquery-1.10.2.min.js"></script>
 <body>
 <center>
-	<h3>Construction Trend Chart Report</h3>
+	<h3>Forecast Workload Report</h3>
 	<!-- one way to display error messages – globally -->
-	<spring:hasBindErrors name="trendInfo">
+	<spring:hasBindErrors name="workloadInfo">
 		<font color="red">
 			<c:forEach items="${errors.allErrors}" var="error">
 				<spring:message code="${error.code}" text="${error.defaultMessage}"/><br/>
@@ -20,36 +19,35 @@
 		</font>
 	</spring:hasBindErrors>
 	<p>
-		<c:url value="/dep/trend/trendResult" var="theAction" />
-	
+	<c:url value="http://www.google.com" var="http://www.google.com"></c:url>
 		<!-- note second way of displaying error messages – by field -->
-		<form:form commandName="trendInfo" method="POST" action="/dep/trend/trendResult">
-			Bureau:
-			<form:select path="bureau">
+		<form:form commandName="workloadInfo" method="POST" action="/dep/workload/workloadResult">
+			Project Stage:
+			<form:select path="stage">
 				<form:option value="NONE" label="--- Select ---" />
-				<form:options items="${bureauSelectList}" />
+				<form:options items="${stageSelectList}" />
 			</form:select><br />
-			Operating Bureau:
-			<form:select path="operatingBureau">
+
+			Master Program:
+			<form:select path="masterProgram">
 				<form:option value="NONE" label="--- Select ---" />
-				<form:options items="${opBureauSelectList}" />
+				<form:options items="${masterProgramSelectList}" />
 			</form:select><br />
-			Compared Month:
-			<form:select path="comparedMonth">
-				<form:option value="0" label="--- Select ---" />
-				<form:options items="${comparedMonthSelectList}" />
+
+			Managed By:
+			<form:select path="managedBy">
+				<form:option value="NONE" label="--- Select ---" />
+				<form:options items="${managedBySelectList}" />
 			</form:select><br />
-			Current Month:
-			<form:select path="currentMonth">
-				<form:option value="0" label="--- Select ---" />
-				<form:options items="${currentMonthSelectList}" />
-			</form:select><br />
-			Trend Chart End Period:
+			
+			Chart End Period:
 			<form:select path="endPeriod">
 				<form:option value="0" label="--- Select ---" />
 				<form:options items="${endPeriodSelectList}" />
-			</form:select><br /><br />
+			</form:select><br />
 			
+			<br />
+
 			<input type="submit" title="submit" />
 		</form:form>
 	</p>

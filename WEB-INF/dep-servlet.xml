@@ -31,6 +31,7 @@
 
 <bean id="batchValidator" class="dep.web.BatchValidator" />
 <bean id="trendValidator" class="dep.web.TrendValidator" />
+<bean id="costTrendValidator" class="dep.web.CostTrendValidator" />
 <bean id="workloadValidator" class="dep.web.WorkloadValidator" />
 <bean id="staffloadValidator" class="dep.web.StaffloadValidator" />
 <bean id="SCGLogValidator" class="dep.web.SCGLogValidator" />
