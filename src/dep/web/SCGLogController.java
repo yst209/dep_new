@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -37,6 +38,8 @@ import dep.model.SCGLogInfo;
 @RequestMapping("/scg_log/**")
 public class SCGLogController
 {
+	private Logger logger = Logger.getLogger(SCGLogController.class);
+	
 	@Autowired
 	private SCGLogValidator SCGLogValidator;
 	
@@ -102,7 +105,7 @@ public class SCGLogController
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView index(HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-		System.out.println("scg index index from IP: " + request.getRemoteHost()+ " at " + new DateTime());
+		logger.info("IP: " + request.getRemoteHost());
 		
 		generateDropdown();
 		ModelAndView modelAndView = new ModelAndView("scg_log/scg_index");
@@ -112,8 +115,8 @@ public class SCGLogController
 	}
     
     @RequestMapping(value = "/scg_edit", method = RequestMethod.POST)
-    public ModelAndView edit(@ModelAttribute("SCGLogInfo") SCGLogInfo info, BindingResult result) {
- 		System.out.println("scg_edit " + new DateTime());
+    public ModelAndView edit(@ModelAttribute("SCGLogInfo") SCGLogInfo info, BindingResult result, HttpServletRequest request) {
+		logger.info("IP: " + request.getRemoteHost());
     	
     	SCGLogValidator.validate(info, result);
 		if (result.hasErrors()) {
@@ -158,8 +161,8 @@ public class SCGLogController
     }
  
     @RequestMapping(value = "/scg_save", method = RequestMethod.POST)
-    public ModelAndView save(@ModelAttribute("scgForm") SCGForm scgForm) {
- 		System.out.println("scg_save " + new DateTime());
+    public ModelAndView save(@ModelAttribute("scgForm") SCGForm scgForm, HttpServletRequest request) {
+		logger.info("IP: " + request.getRemoteHost());
 
         Long latestDataPeriod = dao.getLatestSCGLogDataPeriod();
         for(SCGLogEntity project: scgForm.getProjects())
@@ -178,8 +181,8 @@ public class SCGLogController
 	
 	
     @RequestMapping(value = "/scg_submit", method = RequestMethod.POST)
-    public ModelAndView submit(@ModelAttribute("SCGLogInfo") SCGLogInfo info, BindingResult result) {
- 		System.out.println("scg_submit " + new DateTime());
+    public ModelAndView submit(@ModelAttribute("SCGLogInfo") SCGLogInfo info, BindingResult result, HttpServletRequest request) {
+		logger.info("IP: " + request.getRemoteHost());
 
     	
     	SCGLogValidator.validate(info, result);

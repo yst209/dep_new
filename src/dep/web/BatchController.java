@@ -25,6 +25,7 @@ import java.util.StringTokenizer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.Months;
 import org.joda.time.format.DateTimeFormat;
@@ -45,6 +46,8 @@ import dep.model.CobraCostDataEntity;
 @RequestMapping("/batch/**")
 public class BatchController
 {
+	private Logger logger = Logger.getLogger(BatchController.class);
+	
 	@Autowired
 	private BatchValidator batchValidator;
 	
@@ -121,7 +124,7 @@ public class BatchController
 	@RequestMapping(method=RequestMethod.GET)
     public ModelAndView index(HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-		System.out.println("batch index from IP: " + request.getRemoteHost()+ " at " + new DateTime());
+		logger.info("IP: " + request.getRemoteHost());
 		
 		generateDropdown();
 		ModelAndView modelAndView = new ModelAndView("batch/batch");
@@ -132,9 +135,9 @@ public class BatchController
 	}
 	
     @RequestMapping(value = "/batchResult", method = RequestMethod.POST)
-    synchronized public ModelAndView submit(@ModelAttribute("batchInfo") BatchInfo bi, BindingResult result) throws Exception
+    synchronized public ModelAndView submit(@ModelAttribute("batchInfo") BatchInfo bi, BindingResult result, HttpServletRequest request) throws Exception
 	{
-    	System.out.println("submit at " + new DateTime());
+		logger.info("IP: " + request.getRemoteHost());
 		batchValidator.validate(bi, result);
 		if (result.hasErrors()) {
 			System.out.println("errors");
