@@ -4,16 +4,14 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.joda.time.DateTime;
+import org.apache.log4j.Logger;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +30,6 @@ import ChartDirector.Chart;
 import ChartDirector.LineLayer;
 import ChartDirector.XYChart;
 import dep.dao.DatabaseDao;
-import dep.model.Account;
 import dep.model.CostTrendEntity;
 import dep.model.CostTrendInfo;
 import dep.model.HistoricalTrendEntity;
@@ -43,12 +40,15 @@ import dep.model.MonthlyEntity;
 //@RequestMapping("/trend") //http://localhost:8080/dep/trend/trendChart.html
 public class CostTrendController
 {
+	
+	private Logger logger = Logger.getLogger(CostTrendController.class);
+	
 	@Autowired
 	private CostTrendValidator costTrendValidator;
 	
 	public String chart1URL;
 	public String imageMap1;
-	
+	@Autowired
 	DatabaseDao dao = new DatabaseDao();
 	
 	Map<String, String> projectToBureauMap;
@@ -75,7 +75,6 @@ public class CostTrendController
 
 	public void generateDropdown()
 	{
-	 	dao.setDataSource();
 		
 		PMSelectList = new LinkedHashMap<String,String>();
 	 	PMSelectList.put("All", "All");//Back end, Front end
@@ -124,10 +123,10 @@ public class CostTrendController
 	}
 	
 	@RequestMapping(method=RequestMethod.GET)
-    public ModelAndView index(HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-		System.out.println("CostTrend index from IP: " + request.getRemoteHost()+ " at " + new DateTime());
-
+    public ModelAndView index(HttpServletRequest request) throws Exception {
+		logger.info("IP: " + request.getRemoteHost());
+//	    logger.debug("This is a debug message.");
+//	    logger.error("This is a error message.");
 		generateDropdown();
 		ModelAndView modelAndView = new ModelAndView("cost_trend/trendChart"); // /jsp/ trend/trendChart .jsp
 		modelAndView.addObject("costTrendInfo", new CostTrendInfo());
@@ -139,9 +138,9 @@ public class CostTrendController
 	}
 	
     @RequestMapping(value = "/trendResult", method=RequestMethod.POST)
-    public ModelAndView submit(@ModelAttribute("costTrendInfo") CostTrendInfo ti, BindingResult result) throws Exception
+    public ModelAndView submit(@ModelAttribute("costTrendInfo") CostTrendInfo ti, BindingResult result, HttpServletRequest request) throws Exception
 	{
-		System.out.println("costTrend submit " + new DateTime());
+		logger.info("IP: " + request.getRemoteHost());
 		costTrendValidator.validate(ti, result);
 		if (result.hasErrors()) {
 			System.out.println("errors");
@@ -156,16 +155,13 @@ public class CostTrendController
 			return modelAndView;
 
 		} else {
-			
+			generateDropdown();
 //			projectId = "CAT-213B";
 //			contractType = "D";
 			projectId = ti.getProjectId();
 			contractType = ti.getContractType();
 	
 			System.out.println("Selected projectId: " + projectId + ", contractType: " + contractType);
-			
-		 	DatabaseDao dao = new DatabaseDao();
-		 	dao.setDataSource();
 		 	
 		 	
 		 	List<CostTrendEntity> list = dao.getBudgetContractEAC(projectId, contractType);
@@ -174,7 +170,7 @@ public class CostTrendController
 //		 	{
 //		 		System.out.println(entity.getDataPeriod() + ", " + entity.getBudget()  + ", " + entity.getEAC()  + ", " + entity.getAdjustedContractPrice()  + ", " + entity.getCurrentContractForecast() );
 //		 	}
-			renderChart(list, 201201L, 201305L);
+			renderChart(list);
 			
 			
 			ti.setChart1URL("/dep/pages/getchart.jsp?" + chart1URL);
@@ -187,7 +183,7 @@ public class CostTrendController
 	}
 
 	
-	public void renderChart(List<CostTrendEntity> list, Long startMonth, Long endMonth){
+	public void renderChart(List<CostTrendEntity> list){
 		double[] budgetList = new double[list.size()];
 		double[] EACList = new double[list.size()];//Baseline + 15% Delay
 		double[] adjustedContractPriceList = new double[list.size()];

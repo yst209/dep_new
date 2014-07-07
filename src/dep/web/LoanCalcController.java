@@ -44,7 +44,7 @@ public class LoanCalcController
 	
 	public String chart1URL;
 	public String imageMap1;
-	
+	@Autowired
 	DatabaseDao dao = new DatabaseDao();
 	
 	Map<String, String> projectToBureauMap;
@@ -70,7 +70,6 @@ public class LoanCalcController
 
 	public void generateDropdown()
 	{
-	 	dao.setDataSource();
 		
 		bureauSelectList = new LinkedHashMap<String,String>();
 		bureauSelectList.put("BEDC", "BEDC");//Back end, Front end
@@ -237,8 +236,6 @@ public class LoanCalcController
 //		 	dataSource.setUrl("jdbc:jtds:sqlserver://BEE-WASQA2;databaseName=ProjectControl");
 //		 	dataSource.setUsername("pmis_reader");
 //		 	dataSource.setPassword("pmis123");
-		 	DatabaseDao dao = new DatabaseDao();
-		 	dao.setDataSource();
 		 	
 		 	
 		 	List<ProjectBureauEntity> projectMappingList = dao.getProjectsByBureau(bureau, operatingBureau);

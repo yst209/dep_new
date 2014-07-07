@@ -51,15 +51,11 @@ public class SCGLogController
 	public List<String> CSVFileTypes = new ArrayList<String>(Arrays.asList("ACT 12MTH", "ACT Fore", "ACWP", "RES 12MTH", "RES Fore"));
 	DateTime dataPeriodDate;
 	ArrayList<String> storeValues;
-	
+	@Autowired
 	DatabaseDao dao = new DatabaseDao();
 	
 	public String chart1URL;
 	public String imageMap1;
-//	@Resource
-//    private DatabaseDao databaseDao;
-	private @Autowired
-	HttpServletRequest request;
 //	private @Autowired
 //	HttpServletResponse response;
 	Map<String, String> projectToBureauMap;
@@ -89,7 +85,6 @@ public class SCGLogController
 	
 	public void generateDropdown()
 	{
-	 	dao.setDataSource();
 	 	
 		dataPeriodSelectList = new LinkedHashMap<Long,String>();
 		
@@ -166,7 +161,6 @@ public class SCGLogController
     public ModelAndView save(@ModelAttribute("scgForm") SCGForm scgForm) {
  		System.out.println("scg_save " + new DateTime());
 
- 		dao.setDataSource();
         Long latestDataPeriod = dao.getLatestSCGLogDataPeriod();
         for(SCGLogEntity project: scgForm.getProjects())
         {
@@ -204,6 +198,7 @@ public class SCGLogController
 		 	
 			ModelAndView modelAndView = new ModelAndView("SCGExcelBean");
 			modelAndView.addObject("SCGMap", map2);
+			modelAndView.addObject("dao", dao);
 			modelAndView.addObject("month", info.getReportMonth());
 			return modelAndView;
 		}
@@ -211,7 +206,6 @@ public class SCGLogController
     
     public void runReport(String selectedMonth) 
     {
-	 	dao.setDataSource();
 //	 	selectedMonth = "201111";
 	 	
 	 	String scgLogDataPeriod;

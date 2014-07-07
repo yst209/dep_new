@@ -63,14 +63,11 @@ public class BatchController
 	String dataPeriodDateToString;
 	ArrayList<String> storeValues;
 	
+	@Autowired
 	DatabaseDao dao = new DatabaseDao();
 	
 	public String chart1URL;
 	public String imageMap1;
-//	@Resource
-//    private DatabaseDao databaseDao;
-	private @Autowired
-	HttpServletRequest request;
 	Map<String, String> cobraStatusDateMap;
 	Boolean updateTotalsOnly;
 
@@ -88,7 +85,6 @@ public class BatchController
 	
 	public void generateDropdown()
 	{
-	 	dao.setDataSource();
 	 	
 		dataPeriodSelectList = new LinkedHashMap<Long,String>();
 		
@@ -214,7 +210,6 @@ public class BatchController
 			getProjectList("C:\\ProjectControl\\" + coordinator + "\\project_list.csv");
 			
 			updateTotalsOnly = bi.getUpdateTotalsOnly();
-			dao.setDataSource();
 		 	cobraStatusDateMap = dao.getCobraStatusDate();
 			if(updateTotalsOnly)
 				runUpdate("update_totals");//advance_calendar
@@ -903,8 +898,6 @@ public class BatchController
 			
 
 		    
-		    
-		 	dao.setDataSource();
 		 	
 		 	List<CobraCostDataEntity> list = dao.getCobraCostData();
 		 	Map<String, CobraCostDataEntity> map = new HashMap<String, CobraCostDataEntity>();

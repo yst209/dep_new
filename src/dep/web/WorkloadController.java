@@ -42,7 +42,7 @@ public class WorkloadController
 	
 	public String chart1URL;
 	public String imageMap1;
-	
+	@Autowired
 	DatabaseDao dao = new DatabaseDao();
 	
 	Map<String, List<WorkloadEntity>> workloadLevelOneMap;
@@ -69,7 +69,6 @@ public class WorkloadController
 
 	public void generateDropdown()
 	{
-	 	dao.setDataSource();
 		
 	 	stageSelectList = new LinkedHashMap<String,String>();
 	 	stageSelectList.put("Design", "Design");//Back end, Front end
@@ -150,8 +149,6 @@ public class WorkloadController
 			System.out.println("managedBy: " + managedBy);
 			System.out.println("endPeriod: " + endPeriod);
 			
-		 	DatabaseDao dao = new DatabaseDao();
-		 	dao.setDataSource();
 		 	
 			startMonth = dao.getLatestDataDate().intValue();
 			endMonth = endPeriod.intValue();	

@@ -1,6 +1,5 @@
 package dep.excel;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -20,7 +18,6 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.joda.time.Days;
 import org.joda.time.format.DateTimeFormat;
@@ -37,6 +34,7 @@ public class SCGExcelView extends AbstractExcelView{
 	Map<String, SCGLogEntity> previousMap;
     Cell cell;
     CreationHelper createHelper;
+	DatabaseDao dao;
  
 	@Override
 	protected void buildExcelDocument(Map model, HSSFWorkbook workbook,
@@ -47,6 +45,7 @@ public class SCGExcelView extends AbstractExcelView{
 		response.setHeader("Content-disposition", "attachment; filename=SCG-Log.xls");
  
 		Map<String,SCGHistoricalTrendEntity> map = (Map<String,SCGHistoricalTrendEntity>) model.get("SCGMap");
+		dao = (DatabaseDao)model.get("dao");
 		Long month = (Long) model.get("month");
 		Long previousMonth;
 		
@@ -55,8 +54,6 @@ public class SCGExcelView extends AbstractExcelView{
 		else 
 			previousMonth = month - 1;
 		
-		DatabaseDao dao = new DatabaseDao();
-		dao.setDataSource();
 		List<SCGLogEntity> previousList = dao.getSCGLog(previousMonth.toString());
 	 	previousMap = new HashMap<String, SCGLogEntity>();
 		

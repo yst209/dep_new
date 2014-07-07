@@ -48,17 +48,24 @@
     <!-- Scans within the base package of the application for @Components to configure as beans -->
     <context:component-scan base-package="org.springframework.docs.test" />
 
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-        <property name="driverClassName" value="${jdbc.driverClassName}"/>
-        <property name="url" value="${jdbc.url}"/>
-        <property name="username" value=""/>
-        <property name="password" value=""/>
-    </bean>
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+	    <property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver" />
+	    <property name="url" value="jdbc:jtds:sqlserver://BEE-WASQA2;databaseName=ProjectControl" />
+	    <property name="username" value="pmis_reader" />
+	    <property name="password" value="pmis123" />
+	    <!-- <property name="connectionProperties">
+	        <props>
+	            <prop entry="socketTimeout">${timeout.connection}</prop>
+	            <prop entry="loginTimeout">${timeout.login}</prop>                               
+	        </props>
+	    </property> -->
+	</bean>
 
 	<bean id="databaseDao" class="dep.dao.DatabaseDao">
-
-        <property name="dataSource" ref="dataSource"/>
+		<property name="dataSource" ref="dataSource"/>
     </bean>
+    
+
     
 	<context:annotation-config/>
 

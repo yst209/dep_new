@@ -34,35 +34,24 @@ import dep.model.WorkloadEntity;
 
 @Repository
 @Resource
-public class DatabaseDao implements IDao {
+public class DatabaseDao {
 //	private static String strConnect =
 //		"jdbc:odbc:DRIVER=Microsoft Access Driver (*.mdb);DBQ=C:\\Project_Control.mdb;";
-
+		@Autowired
 		private DataSource dataSource;
 
-	    private JdbcTemplate jdbcTemplate;
-	    private DecimalFormat formatter = new DecimalFormat("#,###.00");
-		DateTimeFormatter dateHourMinuteFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+	    public DataSource getDataSource() {
+			return dataSource;
+		}
 
-	    
-
-	    public void setDataSource() {
-		 	BasicDataSource dataSource = new BasicDataSource();
-		 	dataSource.setDriverClassName("net.sourceforge.jtds.jdbc.Driver");
-		 	dataSource.setUrl("jdbc:jtds:sqlserver://BEE-WASQA2;databaseName=ProjectControl");
-		 	dataSource.setUsername("pmis_reader");
-		 	dataSource.setPassword("pmis123");
-		 	DatabaseDao dao = new DatabaseDao();
-//		 	dao.setDataSource(dataSource);
-	    	
-	    	this.dataSource = dataSource;
-	        this.jdbcTemplate = new JdbcTemplate(dataSource);
-	    }
-	    
-	    @Autowired
 		public void setDataSource(DataSource dataSource) {
 			this.dataSource = dataSource;
+			this.jdbcTemplate = new JdbcTemplate(dataSource);
 		}
+
+		private JdbcTemplate jdbcTemplate;
+	    private DecimalFormat formatter = new DecimalFormat("#,###.00");
+		DateTimeFormatter dateHourMinuteFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 
 		public List<HistoricalTrendEntity> getFilteredHistoricalTrendData() {
 			//For baseline information, only use the most current reported baseline from Latest_Data_Period

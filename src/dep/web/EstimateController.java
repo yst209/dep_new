@@ -47,16 +47,11 @@ public class EstimateController
 	DateTime dataPeriodDate;
 	ArrayList<String> storeValues;
 	
+	@Autowired
 	DatabaseDao dao = new DatabaseDao();
 	
 	public String chart1URL;
 	public String imageMap1;
-//	@Resource
-//    private DatabaseDao databaseDao;
-	private @Autowired
-	HttpServletRequest request;
-//	private @Autowired
-//	HttpServletResponse response;
 	List<EstimateEntity> estimateList;
 	Map<String, String> projectToBureauMap;
 	Map<String, EstimateEntity> mapx;
@@ -80,7 +75,6 @@ public class EstimateController
 	
 	public void generateDropdown()
 	{
-	 	dao.setDataSource();
 	 	
 		dataPeriodSelectList = new LinkedHashMap<Long,String>();
 		
@@ -100,7 +94,6 @@ public class EstimateController
             HttpServletResponse response) throws Exception {
 		System.out.println("estimate_index " + new DateTime());
 		
-	 	dao.setDataSource();
 		generateDropdown();
 		ModelAndView modelAndView = new ModelAndView("estimate_index");
 		modelAndView.addObject("EstimateInfo", new EstimateInfo());
@@ -141,7 +134,6 @@ public class EstimateController
     public ModelAndView save(@ModelAttribute("estimateForm") EstimateForm estimateForm, BindingResult result) {
 		System.out.println("estimate_save " + new DateTime());
 
-        dao.setDataSource();
         
     	estimateValidator.validate(estimateForm, result);
 		if (result.hasErrors()) {
@@ -199,7 +191,6 @@ public class EstimateController
     
     public void runReport(String selectedMonth) 
     {
-	 	dao.setDataSource();
 //	 	selectedMonth = "201111";
 	 
 

@@ -41,15 +41,11 @@ public class P6Controller
 	public List<String> CSVFileTypes = new ArrayList<String>(Arrays.asList("ACT 12MTH", "ACT Fore", "ACWP", "RES 12MTH", "RES Fore"));
 	DateTime dataPeriodDate;
 	ArrayList<String> storeValues;
-	
+	@Autowired
 	DatabaseDao dao = new DatabaseDao();
 	
 	public String chart1URL;
 	public String imageMap1;
-//	@Resource
-//    private DatabaseDao databaseDao;
-	private @Autowired
-	HttpServletRequest request;
 //	private @Autowired
 //	HttpServletResponse response;
 	List<HistoricalTrendEntity> P6List;
@@ -75,7 +71,6 @@ public class P6Controller
 	
 	public void generateDropdown()
 	{
-	 	dao.setDataSource();
 	 	
 		dataPeriodSelectList = new LinkedHashMap<Long,String>();
 		
@@ -95,7 +90,6 @@ public class P6Controller
             HttpServletResponse response) throws Exception {
 		System.out.println("p6_index");
 		
-	 	dao.setDataSource();
 	 	P6List = dao.getP6HistoricalTrendData();
 		generateDropdown();
 		ModelAndView modelAndView = new ModelAndView("p6_index");
