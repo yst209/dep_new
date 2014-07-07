@@ -48,8 +48,19 @@
 
 $(document).ready(init);
 
+var selectedProject="";
+
 function init(){
 	$("#loader").hide();
+    if ('onhashchange' in window) {
+        // Fix "project ID list not updated" issue when back button is clicked.
+        //alert(selectedPM);
+     	if($('#portfolioManager').children('option:selected').val() != "NONE")
+     	{
+           setProjects(); 
+     	}
+	}
+
 }
 
 $("#form").submit(function(event) {
@@ -65,7 +76,8 @@ $("#form").submit(function(event) {
 
 function errorAlert(e, jqxhr)
 {
-	alert("Your request was not successful: " + e.responseText);
+	//alert("Your request was not successful: " + e.responseText);
+	alert("Your session has expired. Please refresh the page again. ");
 }
 	
 function getProjects(_url, PM){
@@ -79,9 +91,11 @@ function getProjects(_url, PM){
 			 success: function(data) { 
 		    	var projects = JSON.parse(data);
 		    	var curOption ="<option value='NONE'>--- Select ---</option>";
-
 				for(var i = 0; i < projects.length; i++) {//can't use forEach in IE8
-		    		curOption+="<option value='" + projects[i] + "'>" + projects[i] + "</option>";
+					if(projects[i] == selectedProject)//Remember what was selected last time
+						curOption+="<option value='" + projects[i] + "' selected>" + projects[i] + "</option>";
+					else
+						curOption+="<option value='" + projects[i] + "'>" + projects[i] + "</option>";
 		    	}
 		    	$('#projectId').html("");
 		    	$(curOption).appendTo($('#projectId'));
@@ -93,10 +107,10 @@ function getProjects(_url, PM){
 
 
 function setProjects(){
-var curPM = $('#portfolioManager').children('option:selected').val();//text()->label, val()->value
+var selectedPM = $('#portfolioManager').children('option:selected').val();//text()->label, val()->value
+selectedProject = $('#projectId').children('option:selected').val();
 $('#projectId').html(""); // reset the AMs list
-getProjects('/dep/cost_trend/getProjectsByPM/' , curPM);
-
+getProjects('/dep/cost_trend/getProjectsByPM/' , selectedPM);
 }
 
 
