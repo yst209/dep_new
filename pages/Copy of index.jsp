@@ -11,7 +11,7 @@ a.test {
 </style>
 
 
-<div id="myElement" style="border:2px solid red;">Hello laptop</div>
+<div id="myElement" style="border:2px solid red;">Hello laptop 2</div>
 
 This is Hello World by HTML${pageContext.request.contextPath}
 <a href="http://jquery.com/">jQuery link</a>
