@@ -90,8 +90,9 @@ public class BatchController
 	{
 	 	
 		dataPeriodSelectList = new LinkedHashMap<Long,String>();
-		
-        for(int i= new Integer(dateFormat.format(dataPeriodFormatter.parseDateTime(dao.getLatestDataDate().toString()).minusMonths(1).toDate()));i<=new Integer(dateFormat.format(dataPeriodFormatter.parseDateTime(dao.getLatestDataDate().toString()).toDate()));i++)
+
+//      for(int i= new Integer(dateFormat.format(dataPeriodFormatter.parseDateTime(dao.getLatestDataDate().toString()).minusMonths(1).toDate()));i<=new Integer(dateFormat.format(dataPeriodFormatter.parseDateTime(dao.getLatestDataDate().toString()).toDate()));i++)
+        for(int i= new Integer(dateFormat.format(new DateTime().minusMonths(2).toDate()));i < new Integer(dateFormat.format(new DateTime().toDate()));i++)
         {
         	if(i%100>=1 && i%100<=12)
         	{
