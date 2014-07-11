@@ -35,7 +35,6 @@ import dep.model.HistoricalTrendEntity;
 import dep.model.MonthlyEntity;
 import dep.model.ProjectBureauEntity;
 import dep.model.TrendInfo;
-import dep.service.DBManager;
 
 //Not released yet.
 public class ProjectTrendController
