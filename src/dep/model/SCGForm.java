@@ -12,6 +12,7 @@ public class SCGForm
 	}
 	
 	private List<SCGLogEntity> projects;
+	private List<SCGHistoricalTrendEntity> supportingRoleProjects;
 
 	public List<SCGLogEntity> getProjects() {
 		return projects;
@@ -44,5 +45,14 @@ public class SCGForm
 		 								}
 		 );//End of Collections.sort();
 	}
-	
+
+	public List<SCGHistoricalTrendEntity> getSupportingRoleProjects() {
+		return supportingRoleProjects;
+	}
+
+	public void setSupportingRoleProjects(
+			List<SCGHistoricalTrendEntity> supportingRoleProjects) {
+		this.supportingRoleProjects = supportingRoleProjects;
+	}
+
 }

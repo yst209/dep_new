@@ -15,41 +15,38 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <html>
 <head>
-	<title>Schedule Control Group Log</title>
+	<title>Project Supporting Roles<</title>
 </head>
 <script src="/dep/pages/resource/jquery-1.10.2.min.js"></script>
 <body>
 <center>
-	<h2>Update Schedule Control Group Log</h2>
+	<h2>Update Project Supporting Roles</h2>
 	<p>
 	
-		<form:form method="post" action="/dep/scg_log/scg_save" modelAttribute="scgForm">
+		<form:form method="post" action="/dep/scg_log/roles_save" modelAttribute="scgForm">
 			<input type="submit" value="Save Changes" /><br/><br/>
 		    <table>
 		    <tr>
 		    	<th>No.</th>
 		        <th align="left">Project ID</th>
 		        <th align="left">Project Name</th>
-		        <th align="left"><nobr>Portfolio Manager</nobr></th>
-		        <th align="left">Stage</th>
-		        <th>SCG Lead</th>
-		        <th>Claim</th>
-		        <th>Comments</th>
+		        <th align="left"><nobr>SCG Lead</nobr></th>
+		        <th align="left">Project Controls Lead</th>
+		        <th align="left">Permits Lead</th>
+		        <th align="left">Substainability Manager</th>
+		        <th align="left">Cost Estimating Manager</th>
 
 		    </tr>
-		    <c:forEach items="${scgForm.projects}" var="project" varStatus="status">
+		    <c:forEach items="${scgForm.supportingRoleProjects}" var="project" varStatus="status">
 		        <tr height="40">
 		            <td align="center">${status.count}</td>
-		            <td width="9%">${project.projectId} <input type="hidden" name="projects[${status.index}].projectId" value="${project.projectId}"/></td>
+		            <td width="9%">${project.projectId} <input type="hidden" name="supportingRoleProjects[${status.index}].projectId" value="${project.projectId}"/></td>
 		            <td width="30%">${project.projectName}</td>
-		            <td>${project.portfolioManager}</td>
-		            <td>${project.stage}</td>
-		            <td><input name="projects[${status.index}].SCGLead" value="${project.SCGLead}" size="13"/></td>
-		            <td><input name="projects[${status.index}].claim" value="${project.claim}" size="5"/></td>
-		            <td><input name="projects[${status.index}].comments" value="${project.comments}" size="60"/></td>
-		            <td><input type="hidden" name="projects[${status.index}].dataPeriod" value="${project.dataPeriod}" size="10"/></td>
-
-
+		            <td>${project.SCGLead}</td>
+		            <td><input name="supportingRoleProjects[${status.index}].projectControlsLead" value="${project.projectControlsLead}" size="16"/></td>
+		            <td><input name="supportingRoleProjects[${status.index}].permitsLead" value="${project.permitsLead}" size="15"/></td>
+		            <td><input name="supportingRoleProjects[${status.index}].substainabilityManager" value="${project.substainabilityManager}" size="20"/></td>
+		            <td><input name="supportingRoleProjects[${status.index}].costEstimatingManager" value="${project.costEstimatingManager}" size="20"/></td>
 		        </tr>
 		    </c:forEach>
 		</table>

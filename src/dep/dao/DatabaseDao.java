@@ -12,7 +12,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 
-import org.apache.commons.dbcp.BasicDataSource;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -20,8 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import dep.model.CostTrendEntity;
 import dep.model.CobraCostDataEntity;
+import dep.model.CostTrendEntity;
 import dep.model.EstimateEntity;
 import dep.model.HistoricalTrendEntity;
 import dep.model.HistoricalTrendRowMapper;
@@ -145,7 +144,7 @@ public class DatabaseDao {
 			for(SCGLogEntity entity: list)
 				previousProjects += "'" + entity.getProjectId() + "', ";
 			previousProjects = previousProjects.substring(0, previousProjects.length()-2);
-			System.out.println("previousProjects: " + previousProjects);
+//			System.out.println("previousProjects: " + previousProjects);
 			//For baseline information, only use the most current reported baseline from Latest_Data_Period
 			String SQL = "select * from P6_Historical_Trend " +
 //						"where ((P6_Orig_Proj_id is null And Current_Status = 'Active' And Data_Period = '"+ dataPeriod +"') OR (P6_Orig_Proj_id is not null AND Data_Period = (SELECT max(Data_Period) as Latest_Data_Period FROM P6_Historical_Trend))) " +
@@ -162,7 +161,6 @@ public class DatabaseDao {
 			
 			List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL);
 			
-			System.out.println(rows.size());
 			for (Map row : rows) {
 				SCGHistoricalTrendEntity entity = new SCGHistoricalTrendEntity();
 
@@ -219,7 +217,6 @@ public class DatabaseDao {
 				SCGDataList.add(entity);
 			}
 			
-			System.out.println("SCGDataList.size(): " + SCGDataList.size());
 			return SCGDataList;
 		}
 
@@ -229,14 +226,13 @@ public class DatabaseDao {
 						"where Data_Period = '"+ dataPeriod +"' " +
 						"Order by Data_Period, Project_ID";
 			
-			System.out.println("getSCGLog SQL: " + SQL);
+//			System.out.println("getSCGLog SQL: " + SQL);
 			
 			
 			List<SCGLogEntity> SCGLogList = new ArrayList<SCGLogEntity>();
 			
 			List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL);
 			
-			System.out.println(rows.size());
 			for (Map row : rows) {
 				SCGLogEntity entity = new SCGLogEntity();
 
@@ -250,7 +246,6 @@ public class DatabaseDao {
 				SCGLogList.add(entity);
 			}
 			
-			System.out.println("SCGLogList.size(): " + SCGLogList.size());
 			return SCGLogList;
 		}
 		
@@ -263,7 +258,6 @@ public class DatabaseDao {
 						"and (Class = 'ORIGCONT' OR Class = 'RCO' OR Class = 'PCO') " +
 						"and [Data_Period] = '" + dataPeriod + "' " +
 						"group by [Project]";
-			System.out.println("getEAC SQL: " + SQL);
 
 			Map<String, Long> map = new HashMap<String, Long>();
 			
@@ -272,7 +266,6 @@ public class DatabaseDao {
 				map.put((String)(row.get("PROJECT")), Long.parseLong(((BigDecimal)(row.get("Current_Construction_Contract_Amount"))).toString().split("\\.")[0]));
 			}
 			
-			System.out.println("map.size(): " + map.size());
 			return map;
 		}
 		
@@ -285,7 +278,6 @@ public class DatabaseDao {
 						"and Class = 'ORIGCONT' " +
 						"and [Data_Period] = '" + dataPeriod + "' " +
 						"group by [Project]";
-			System.out.println("getOrigCont SQL: " + SQL);
 
 			Map<String, Long> map = new HashMap<String, Long>();
 			
@@ -294,7 +286,6 @@ public class DatabaseDao {
 				map.put((String)(row.get("PROJECT")), Long.parseLong(((BigDecimal)(row.get("Orig_Construction_Contract_Amount"))).toString().split("\\.")[0]));
 			}
 			
-			System.out.println("map.size(): " + map.size());
 			return map;
 		}
 		
@@ -350,7 +341,6 @@ public class DatabaseDao {
 			
 			List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL);
 			
-			System.out.println(rows.size());
 			for (Map row : rows) {
 				SCGLogEntity entity = new SCGLogEntity();
 
@@ -364,7 +354,6 @@ public class DatabaseDao {
 				SCGLogList.add(entity);
 			}
 			
-			System.out.println("SCGLogList.size(): " + SCGLogList.size());
 			return SCGLogList;
 		}
 
@@ -382,7 +371,6 @@ public class DatabaseDao {
 			String line;
 			while( (line = br.readLine()) != null)
 			{
-				System.out.println(line);
 				SQL+=line;
 //				projectList.add(line);
 			}
@@ -393,14 +381,12 @@ public class DatabaseDao {
 				e.printStackTrace();
 			}			
 			
-			System.out.println("getP6HistoricalTrendData SQL: " + SQL);
 			
 			
 			List<HistoricalTrendEntity> p6List = new ArrayList<HistoricalTrendEntity>();
 			
 			List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL);
 			
-			System.out.println(rows.size());
 			for (Map row : rows) {
 				HistoricalTrendEntity entity = new HistoricalTrendEntity();
 				entity.setProjectId((String)(row.get("Project_ID")));
@@ -417,7 +403,6 @@ public class DatabaseDao {
 				p6List.add(entity);
 			}
 			
-			System.out.println("p6List.size(): " + p6List.size());
 			return p6List;
 		}
 		
@@ -476,7 +461,6 @@ public class DatabaseDao {
 			
 			List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL);
 			
-//			System.out.println(rows.size());
 			for (Map row : rows) {
 				WorkloadEntity entity = new WorkloadEntity();
 				entity.setProjectId((String)(row.get("Project_ID")));
@@ -908,5 +892,84 @@ public class DatabaseDao {
 			return list;
 		}
 		
+		public List<SCGHistoricalTrendEntity> getProjectSupportingRoles(String file) {
+			String SQL="";
+		 	
+			BufferedReader br;
+			try {
+				br = new BufferedReader(new InputStreamReader(
+					    getClass().getClassLoader().getResourceAsStream(
+					            "dep/dao/sql/ProjectSupportingRoles_" + file + ".txt")));
+
+			 
+			String line;
+			while( (line = br.readLine()) != null)
+			{
+				SQL+=line;
+			}
+			
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+//			System.out.println("getProjectSupportingRoles SQL: " + SQL);
+			
+			
+			List<SCGHistoricalTrendEntity> list = new ArrayList<SCGHistoricalTrendEntity>();
+			
+			List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL);
+			
+			for (Map row : rows) {
+				SCGHistoricalTrendEntity entity = new SCGHistoricalTrendEntity();
+				
+				entity.setProjectId((String)(row.get("Project_ID")));
+				entity.setProjectName((String)(row.get("Project_Name")));
+				entity.setSCGLead((String)(row.get("SCG_Lead")));
+				entity.setProjectControlsLead((String)(row.get("Project_Controls_Lead")));
+				entity.setPermitsLead((String)(row.get("Permits_Lead")));
+				entity.setSubstainabilityManager((String)(row.get("Substainability_Manager")));
+				entity.setCostEstimatingManager((String)(row.get("Cost_Estimating_Manager")));
+				
+				list.add(entity);
+			}
+
+			return list;
+		}
 		
+		public void updateSupportingRole(SCGHistoricalTrendEntity entity, String type) {
+			String SQL;
+			if(type.equals("SCG_Lead")){
+				SQL = "UPDATE [ProjectControl].[dbo].[Project_Supporting_Roles] " +
+						   "SET [SCG_Lead] = '" + (entity.getSCGLead() == null ? "" : entity.getSCGLead().replace("'", "''")) + "' " +
+						   "WHERE [Project_ID] = '" + entity.getProjectId() + "'";
+			} else {
+				SQL = "UPDATE [ProjectControl].[dbo].[Project_Supporting_Roles] " +
+						   "SET [Project_Controls_Lead] = '" + (entity.getProjectControlsLead() == null ? "" : entity.getProjectControlsLead().replace("'", "''")) + "' " +
+						   ", [Permits_Lead] = '" + (entity.getPermitsLead() == null ? "" : entity.getPermitsLead().replace("'", "''")) + "' " +
+						   ", [Substainability_Manager] = '" + (entity.getSubstainabilityManager() == null ? "" : entity.getSubstainabilityManager().replace("'", "''")) + "' " +
+						   ", [Cost_Estimating_Manager] = '" + (entity.getCostEstimatingManager() == null ? "" : entity.getCostEstimatingManager().replace("'", "''")) + "' " +
+						   "WHERE [Project_ID] = '" + entity.getProjectId() + "'";
+			}
+			System.out.println("updateSupportingRole SQL: " + SQL);
+			jdbcTemplate.execute(SQL);
+		}
+		
+		public void insertSupportingRole(SCGHistoricalTrendEntity entity) {
+			String SQL = "INSERT INTO [ProjectControl].[dbo].[Project_Supporting_Roles] " +
+					     "      ([Project_ID] " +
+					     "      ,[SCG_Lead] " +
+					     "      ,[Project_Controls_Lead] " +
+					     "      ,[Permits_Lead] " +
+					     "      ,[Substainability_Manager] " +
+					     "      ,[Cost_Estimating_Manager]) " +
+					     "VALUES " +
+					     "      ('" + entity.getProjectId() + "' " + 
+					     "      ,'" + (entity.getSCGLead() == null ? "" : entity.getSCGLead().replace("'", "''")) + "' " +
+					     "      ,'" + (entity.getProjectControlsLead() == null ? "" : entity.getProjectControlsLead().replace("'", "''")) + "' " +
+					     "      ,'" + (entity.getPermitsLead() == null ? "" : entity.getPermitsLead().replace("'", "''")) + "' " +
+					     "      ,'" + (entity.getSubstainabilityManager() == null ? "" : entity.getSubstainabilityManager().replace("'", "''")) + "' " +
+					     "      ,'" + (entity.getCostEstimatingManager() == null ? "" : entity.getCostEstimatingManager().replace("'", "''")) + "')";
+			System.out.println("insertSupportingRole SQL: " + SQL);
+			jdbcTemplate.execute(SQL);
+		}
 }

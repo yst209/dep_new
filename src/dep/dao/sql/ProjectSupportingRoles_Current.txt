@@ -1,0 +1,13 @@
+select h.[Project_ID], h.[Project_Name] 
+      ,isnull(p.[SCG_Lead], '') as [SCG_Lead] 
+      ,isnull(p.[Project_Controls_Lead], '') as [Project_Controls_Lead] 
+      ,isnull(p.[Permits_Lead], '') as [Permits_Lead] 
+      ,isnull(p.[Substainability_Manager], '') as [Substainability_Manager] 
+      ,isnull(p.[Cost_Estimating_Manager], '') as [Cost_Estimating_Manager] 
+from P6_Historical_Trend h left join [ProjectControl].[dbo].[Project_Supporting_Roles] p on p.Project_ID = h.Project_ID 
+where P6_Orig_Proj_id is null 	  
+And ( Current_Status = 'Active' or Current_Status = 'On-Hold' ) 
+AND h.Data_Period = (SELECT max(Data_Period) as Latest_Data_Period FROM P6_Historical_Trend) 
+And h.Project_ID not like 'EE-DSGN%' 
+And h.Project_ID not like 'CTYWDCM%' 
+order by h.Project_ID 

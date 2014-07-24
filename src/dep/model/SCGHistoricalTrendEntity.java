@@ -51,6 +51,12 @@ public class SCGHistoricalTrendEntity
 	private String comments;
 	private String claim;
 	
+	//From Project Supporting Roles
+	private String projectControlsLead;
+	private String permitsLead;
+	private String substainabilityManager;
+	private String costEstimatingManager;
+	
 	public String getId() {
 		return id;
 	}
@@ -269,6 +275,30 @@ public class SCGHistoricalTrendEntity
 	}
 	public void setCurrentFC(String currentFC) {
 		this.currentFC = currentFC;
+	}
+	public String getProjectControlsLead() {
+		return projectControlsLead;
+	}
+	public void setProjectControlsLead(String projectControlsLead) {
+		this.projectControlsLead = projectControlsLead;
+	}
+	public String getPermitsLead() {
+		return permitsLead;
+	}
+	public void setPermitsLead(String permitsLead) {
+		this.permitsLead = permitsLead;
+	}
+	public String getSubstainabilityManager() {
+		return substainabilityManager;
+	}
+	public void setSubstainabilityManager(String substainabilityManager) {
+		this.substainabilityManager = substainabilityManager;
+	}
+	public String getCostEstimatingManager() {
+		return costEstimatingManager;
+	}
+	public void setCostEstimatingManager(String costEstimatingManager) {
+		this.costEstimatingManager = costEstimatingManager;
 	}
 	
 }
