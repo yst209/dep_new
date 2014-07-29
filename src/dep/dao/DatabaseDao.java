@@ -927,7 +927,7 @@ public class DatabaseDao {
 				entity.setSCGLead((String)(row.get("SCG_Lead")));
 				entity.setProjectControlsLead((String)(row.get("Project_Controls_Lead")));
 				entity.setPermitsLead((String)(row.get("Permits_Lead")));
-				entity.setSubstainabilityManager((String)(row.get("Substainability_Manager")));
+				entity.setSustainabilityManager((String)(row.get("Sustainability_Manager")));
 				entity.setCostEstimatingManager((String)(row.get("Cost_Estimating_Manager")));
 				
 				list.add(entity);
@@ -946,7 +946,7 @@ public class DatabaseDao {
 				SQL = "UPDATE [ProjectControl].[dbo].[Project_Supporting_Roles] " +
 						   "SET [Project_Controls_Lead] = '" + (entity.getProjectControlsLead() == null ? "" : entity.getProjectControlsLead().replace("'", "''")) + "' " +
 						   ", [Permits_Lead] = '" + (entity.getPermitsLead() == null ? "" : entity.getPermitsLead().replace("'", "''")) + "' " +
-						   ", [Substainability_Manager] = '" + (entity.getSubstainabilityManager() == null ? "" : entity.getSubstainabilityManager().replace("'", "''")) + "' " +
+						   ", [Sustainability_Manager] = '" + (entity.getSustainabilityManager() == null ? "" : entity.getSustainabilityManager().replace("'", "''")) + "' " +
 						   ", [Cost_Estimating_Manager] = '" + (entity.getCostEstimatingManager() == null ? "" : entity.getCostEstimatingManager().replace("'", "''")) + "' " +
 						   "WHERE [Project_ID] = '" + entity.getProjectId() + "'";
 			}
@@ -960,14 +960,14 @@ public class DatabaseDao {
 					     "      ,[SCG_Lead] " +
 					     "      ,[Project_Controls_Lead] " +
 					     "      ,[Permits_Lead] " +
-					     "      ,[Substainability_Manager] " +
+					     "      ,[Sustainability_Manager] " +
 					     "      ,[Cost_Estimating_Manager]) " +
 					     "VALUES " +
 					     "      ('" + entity.getProjectId() + "' " + 
 					     "      ,'" + (entity.getSCGLead() == null ? "" : entity.getSCGLead().replace("'", "''")) + "' " +
 					     "      ,'" + (entity.getProjectControlsLead() == null ? "" : entity.getProjectControlsLead().replace("'", "''")) + "' " +
 					     "      ,'" + (entity.getPermitsLead() == null ? "" : entity.getPermitsLead().replace("'", "''")) + "' " +
-					     "      ,'" + (entity.getSubstainabilityManager() == null ? "" : entity.getSubstainabilityManager().replace("'", "''")) + "' " +
+					     "      ,'" + (entity.getSustainabilityManager() == null ? "" : entity.getSustainabilityManager().replace("'", "''")) + "' " +
 					     "      ,'" + (entity.getCostEstimatingManager() == null ? "" : entity.getCostEstimatingManager().replace("'", "''")) + "')";
 			System.out.println("insertSupportingRole SQL: " + SQL);
 			jdbcTemplate.execute(SQL);

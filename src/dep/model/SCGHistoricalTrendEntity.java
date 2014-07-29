@@ -54,7 +54,7 @@ public class SCGHistoricalTrendEntity
 	//From Project Supporting Roles
 	private String projectControlsLead;
 	private String permitsLead;
-	private String substainabilityManager;
+	private String sustainabilityManager;
 	private String costEstimatingManager;
 	
 	public String getId() {
@@ -288,11 +288,11 @@ public class SCGHistoricalTrendEntity
 	public void setPermitsLead(String permitsLead) {
 		this.permitsLead = permitsLead;
 	}
-	public String getSubstainabilityManager() {
-		return substainabilityManager;
+	public String getSustainabilityManager() {
+		return sustainabilityManager;
 	}
-	public void setSubstainabilityManager(String substainabilityManager) {
-		this.substainabilityManager = substainabilityManager;
+	public void setSustainabilityManager(String sustainabilityManager) {
+		this.sustainabilityManager = sustainabilityManager;
 	}
 	public String getCostEstimatingManager() {
 		return costEstimatingManager;
