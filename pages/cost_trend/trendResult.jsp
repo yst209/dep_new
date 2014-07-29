@@ -7,6 +7,9 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core">
       
+<head>
+	<title>Project Cost Trend Chart Report</title>
+</head>
 <style>
 .tooltip 
 {

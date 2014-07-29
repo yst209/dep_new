@@ -14,18 +14,21 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <html>
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 <head>
 	<title>Schedule Control Group Log</title>
+	<link rel="stylesheet" href="/dep/pages/resource/bootstrap.min.css">
 </head>
 <script src="/dep/pages/resource/jquery-1.10.2.min.js"></script>
+<script src="/dep/pages/resource/bootstrap.min.js"></script>
 <body>
 <center>
 	<h2>Update Schedule Control Group Log</h2>
 	<p>
 	
 		<form:form method="post" action="/dep/scg_log/scg_save" modelAttribute="scgForm">
-			<input type="submit" value="Save Changes" /><br/><br/>
-		    <table>
+			<button type="submit" class="btn btn-primary" data-loading-text="Saving...">Save Changes</button><br/><br/>
+		    <table class="table table-striped">
 		    <tr>
 		    	<th>No.</th>
 		        <th align="left">Project ID</th>
@@ -47,16 +50,21 @@
 		            <td><input name="projects[${status.index}].SCGLead" value="${project.SCGLead}" size="13"/></td>
 		            <td><input name="projects[${status.index}].claim" value="${project.claim}" size="5"/></td>
 		            <td><input name="projects[${status.index}].comments" value="${project.comments}" size="60"/></td>
-		            <td><input type="hidden" name="projects[${status.index}].dataPeriod" value="${project.dataPeriod}" size="10"/></td>
+		            <td><input type="hidden" name="projects[${status.index}].dataPeriod" value="${project.dataPeriod}" size="10" class="form-control"/></td>
 
 
 		        </tr>
 		    </c:forEach>
 		</table>
 		<br/>
-		<input type="submit" value="Save Changes" />
+		<button type="submit" class="btn btn-primary" data-loading-text="Saving...">Save Changes</button>
 		 
 		</form:form>
+<script> 
+$('[type=submit]').on('click', function() {
+    var $this = $(this).button('loading');
+});
+</script> 
 	</p>
 </center>
 </body>

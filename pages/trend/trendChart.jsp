@@ -3,14 +3,16 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <html>
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" /><!-- IE8 only -->
 <head>
 	<title>Construction Trend Chart Report</title>
+	<link rel="stylesheet" href="/dep/pages/resource/bootstrap.min.css">
 </head>
-<script type="text/javascript"
-	src="<c:url value="/resources/jquery-1.7.js" />"></script>
+<script src="/dep/pages/resource/jquery-1.10.2.min.js"></script>
+<script src="/dep/pages/resource/bootstrap.min.js"></script>
 <body>
 <center>
-	<h3>Construction Trend Chart Report</h3>
+	<h2>Construction Trend Chart Report</h2>
 	<!-- one way to display error messages – globally -->
 	<spring:hasBindErrors name="trendInfo">
 		<font color="red">
@@ -24,33 +26,70 @@
 	
 		<!-- note second way of displaying error messages – by field -->
 		<form:form commandName="trendInfo" method="POST" action="/dep/trend/trendResult">
-			Bureau:
-			<form:select path="bureau">
-				<form:option value="NONE" label="--- Select ---" />
-				<form:options items="${bureauSelectList}" />
-			</form:select><br />
-			Operating Bureau:
-			<form:select path="operatingBureau">
-				<form:option value="NONE" label="--- Select ---" />
-				<form:options items="${opBureauSelectList}" />
-			</form:select><br />
-			Compared Month:
-			<form:select path="comparedMonth">
-				<form:option value="0" label="--- Select ---" />
-				<form:options items="${comparedMonthSelectList}" />
-			</form:select><br />
-			Current Month:
-			<form:select path="currentMonth">
-				<form:option value="0" label="--- Select ---" />
-				<form:options items="${currentMonthSelectList}" />
-			</form:select><br />
-			Trend Chart End Period:
-			<form:select path="endPeriod">
-				<form:option value="0" label="--- Select ---" />
-				<form:options items="${endPeriodSelectList}" />
-			</form:select><br /><br />
-			
-			<input type="submit" title="submit" />
+			<table>
+			<tr>
+				<td>
+				    <div class="col-sm-2"><nobr>Bureau:</nobr></div>
+				</td>
+				<td>
+					<form:select path="bureau" class="form-control">
+						<form:option value="NONE" label="--- Select ---" class="form-control"/>
+						<form:options items="${bureauSelectList}" />
+					</form:select>				
+				</td>
+			</tr>
+			<tr>
+				<td>
+				     <div class="col-sm-2"><nobr>Operating Bureau:</nobr></div>
+				</td>
+				<td>
+				    <form:select path="operatingBureau" class="form-control">
+						<form:option value="NONE" label="--- Select ---" />
+						<form:options items="${opBureauSelectList}" />
+					</form:select>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				     <div class="col-sm-2"><nobr>Compared Month:</nobr></div>
+				</td>
+				<td>
+				     <form:select path="comparedMonth" class="form-control">
+						<form:option value="0" label="--- Select ---" />
+						<form:options items="${comparedMonthSelectList}" />
+					</form:select>
+				</td>
+			</tr>                                                
+			<tr>
+				<td>
+				     <div class="col-sm-2"><nobr>Current Month:</nobr></div>
+				</td>
+				<td>
+				    <form:select path="currentMonth" class="form-control">
+						<form:option value="0" label="--- Select ---" />
+						<form:options items="${currentMonthSelectList}" />
+					</form:select>
+				</td>
+			</tr>                                                
+			<tr>
+				<td>
+				     <div class="col-sm-2"><nobr>Trend Chart End Period:</nobr></div>
+				</td>
+				<td>
+				    <form:select path="endPeriod" class="form-control">
+						<form:option value="0" label="--- Select ---" />
+						<form:options items="${endPeriodSelectList}" />
+					</form:select>
+				</td>
+			</tr>                                                
+			<tr>
+				<td><br/><br/>
+					<div style="margin-left:150px;">
+						<button type="submit" class="btn btn-primary">Submit</button>
+					</div>
+				</td>
+			</tr>
+			</table>
 		</form:form>
 	</p>
 </center>
