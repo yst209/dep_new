@@ -15,5 +15,9 @@
 	   	class="dep.excel.P6ExcelView">
 	</bean>
  
+	<bean id="RolesExcelBean"
+	   	class="dep.excel.RolesExcelView">
+	</bean>
+ 
  
 </beans>

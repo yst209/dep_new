@@ -336,6 +336,12 @@ public class SCGLogController
 						tmp.setSCGSupport(logMap.get(scgLogDataPeriod+tmp.getProjectId()).getSCGSupport());
 						tmp.setComments(logMap.get(scgLogDataPeriod+tmp.getProjectId()).getComments());
 						tmp.setClaim(logMap.get(scgLogDataPeriod+tmp.getProjectId()).getClaim());
+
+						tmp.setProjectControlsLead(logMap.get(scgLogDataPeriod+tmp.getProjectId()).getProjectControlsLead());
+						tmp.setPermitsLead(logMap.get(scgLogDataPeriod+tmp.getProjectId()).getPermitsLead());
+						tmp.setSustainabilityManager(logMap.get(scgLogDataPeriod+tmp.getProjectId()).getSustainabilityManager());
+						tmp.setCostEstimatingManager(logMap.get(scgLogDataPeriod+tmp.getProjectId()).getCostEstimatingManager());
+
 						tmp.setCurrentConstructionContractAmount(currContMap.get(tmp.getProjectId()));
 						tmp.setOrigConstructionContractAmount(origContMap.get(tmp.getProjectId()));
 					}
@@ -390,4 +396,12 @@ public class SCGLogController
         return new ModelAndView("scg_log/roles_save", "scgForm", scgForm);
     }
 
+    @RequestMapping(value = "/roles_download", method = RequestMethod.POST)
+    public ModelAndView download(HttpServletRequest request) {
+		logger.info("IP: " + request.getRemoteHost());
+
+		ModelAndView modelAndView = new ModelAndView("RolesExcelBean");
+		modelAndView.addObject("list", dao.getProjectSupportingRoles("All"));
+		return modelAndView;
+	}
 }

@@ -26,8 +26,11 @@
 	<h2>Update Project Supporting Roles</h2>
 	<p>
 	
+		<form:form method="POST" action="/dep/scg_log/roles_download">
+			<button type="submit" class="btn btn-primary">Download Report</button>
+		</form:form><br/>
 		<form:form method="post" action="/dep/scg_log/roles_save" modelAttribute="scgForm">
-			<button type="submit" class="btn btn-primary" data-loading-text="Saving...">Save Changes</button><br/><br/>
+			<button type="submit" class="btn btn-primary saving" data-loading-text="Saving...">Save Changes</button><br/><br/>
 		    <table class="table table-striped">
 		    <tr>
 		    	<th>No.</th>
@@ -54,11 +57,11 @@
 		    </c:forEach>
 		</table>
 		<br/>
-		<button type="submit" class="btn btn-primary" data-loading-text="Saving...">Save Changes</button><br/><br/>
+		<button type="submit" class="btn btn-primary saving" data-loading-text="Saving...">Save Changes</button><br/><br/>
 
 		</form:form>
 <script> 
-$('[type=submit]').on('click', function() {
+$('.saving').on('click', function() {
     var $this = $(this).button('loading');
 });
 </script> 

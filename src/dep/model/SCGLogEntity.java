@@ -13,6 +13,13 @@ public class SCGLogEntity
 	private String SCGSupport;
 	private String comments;
 	private String claim;
+
+	//From Project Supporting Roles
+	private String projectControlsLead;
+	private String permitsLead;
+	private String sustainabilityManager;
+	private String costEstimatingManager;
+
 	
 	public Long getDataPeriod() {
 		return dataPeriod;
@@ -67,5 +74,29 @@ public class SCGLogEntity
 	}
 	public void setStage(String stage) {
 		this.stage = stage;
+	}
+	public String getProjectControlsLead() {
+		return projectControlsLead;
+	}
+	public void setProjectControlsLead(String projectControlsLead) {
+		this.projectControlsLead = projectControlsLead;
+	}
+	public String getPermitsLead() {
+		return permitsLead;
+	}
+	public void setPermitsLead(String permitsLead) {
+		this.permitsLead = permitsLead;
+	}
+	public String getSustainabilityManager() {
+		return sustainabilityManager;
+	}
+	public void setSustainabilityManager(String sustainabilityManager) {
+		this.sustainabilityManager = sustainabilityManager;
+	}
+	public String getCostEstimatingManager() {
+		return costEstimatingManager;
+	}
+	public void setCostEstimatingManager(String costEstimatingManager) {
+		this.costEstimatingManager = costEstimatingManager;
 	}
 }

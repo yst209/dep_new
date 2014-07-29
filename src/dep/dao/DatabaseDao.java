@@ -222,9 +222,19 @@ public class DatabaseDao {
 
 		public List<SCGLogEntity> getSCGLog(String dataPeriod) {
 			//For baseline information, only use the most current reported baseline from Latest_Data_Period
-			String SQL = "select * from SCG_Log " +
+			String SQL = "select [Data_Period] " +
+							      ",s.[Project_ID] " +
+							      ",s.[SCG_Lead] " +
+							      ",[SCG_Support] " +
+							      ",[Comments] " +
+							      ",[Claim] " +
+							      ",[Project_Controls_Lead] " +
+							      ",[Permits_Lead] " +
+							      ",[Sustainability_Manager] " +
+							      ",[Cost_Estimating_Manager] " +
+						"from SCG_Log s left join Project_Supporting_Roles p on s.[Project_ID] = p.[Project_ID] " +
 						"where Data_Period = '"+ dataPeriod +"' " +
-						"Order by Data_Period, Project_ID";
+						"Order by Data_Period, s.[Project_ID]";
 			
 //			System.out.println("getSCGLog SQL: " + SQL);
 			
@@ -241,7 +251,12 @@ public class DatabaseDao {
 				entity.setSCGLead((String)(row.get("SCG_Lead")));
 				entity.setSCGSupport((String)(row.get("SCG_Support")));
 				entity.setComments((String)(row.get("Comments")));
-				entity.setClaim((String)(row.get("Claim")));				
+				entity.setClaim((String)(row.get("Claim")));
+				
+				entity.setProjectControlsLead((String)(row.get("Project_Controls_Lead")));
+				entity.setPermitsLead((String)(row.get("Permits_Lead")));
+				entity.setSustainabilityManager((String)(row.get("Sustainability_Manager")));
+				entity.setCostEstimatingManager((String)(row.get("Cost_Estimating_Manager")));
 
 				SCGLogList.add(entity);
 			}

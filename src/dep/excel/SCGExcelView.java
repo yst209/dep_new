@@ -100,30 +100,35 @@ public class SCGExcelView extends AbstractExcelView{
 		cell = header.createCell(4);	cell.setCellStyle(headerStyle);	cell.setCellValue("Accountable Design Manager");	
 		cell = header.createCell(5);	cell.setCellStyle(headerStyle);	cell.setCellValue("Accountable Construction Manager");	
 		cell = header.createCell(6);	cell.setCellStyle(headerStyle);	cell.setCellValue("SCG Lead");
-		cell = header.createCell(7);	cell.setCellStyle(headerStyle);	cell.setCellValue("Operating Bureau");	
-		cell = header.createCell(8);	cell.setCellStyle(headerStyle);	cell.setCellValue("Current Status");	
-		cell = header.createCell(9);	cell.setCellStyle(headerStyle);	cell.setCellValue("Current Stage");	
-		cell = header.createCell(10);	cell.setCellStyle(headerStyle);	cell.setCellValue("Consent");	
-		cell = header.createCell(11);	cell.setCellStyle(headerStyle);	cell.setCellValue("DFD");	
-		cell = header.createCell(12);	cell.setCellStyle(headerStyle);	cell.setCellValue("Program");	
-		cell = header.createCell(13);	cell.setCellStyle(headerStyle);	cell.setCellValue("BODR");	
-		cell = header.createCell(14);	cell.setCellStyle(headerStyle);	cell.setCellValue("30%");	
-		cell = header.createCell(15);	cell.setCellStyle(headerStyle);	cell.setCellValue("60%");	
-		cell = header.createCell(16);	cell.setCellStyle(headerStyle);	cell.setCellValue("90%");	
-		cell = header.createCell(17);	cell.setCellStyle(headerStyle);	cell.setCellValue("100%");	
-		cell = header.createCell(18);	cell.setCellStyle(headerStyle);	cell.setCellValue("NTP");	
-		cell = header.createCell(19);	cell.setCellStyle(headerStyle);	cell.setCellValue("Data Date");	
-		cell = header.createCell(20);	cell.setCellStyle(headerStyle);	cell.setCellValue("Current Baseline Date");	
-		cell = header.createCell(21);	cell.setCellStyle(headerStyle);	cell.setCellValue("Current Substantial Completion");	
-		cell = header.createCell(22);	cell.setCellStyle(headerStyle);	cell.setCellValue("Current Final Completion");	
-		cell = header.createCell(23);	cell.setCellStyle(headerStyle);	cell.setCellValue("SC Current Variance");	
-		cell = header.createCell(24);	cell.setCellStyle(headerStyle);	cell.setCellValue("Period Gain/Loss");	
-		cell = header.createCell(25);	cell.setCellStyle(headerStyle);	cell.setCellValue("Original Construction Contract Amount");	
-		cell = header.createCell(26);	cell.setCellStyle(headerStyle);	cell.setCellValue("Current Construction Contract Amount");		
-//		cell = header.createCell(27);	cell.setCellStyle(headerStyle);	cell.setCellValue("SCG Support");	
-		cell = header.createCell(27);	cell.setCellStyle(headerStyle);	cell.setCellValue("Current Comments/ Issue");	
-		cell = header.createCell(28);	cell.setCellStyle(headerStyle);	cell.setCellValue("Comptr. Claim");	
-	
+		cell = header.createCell(7);	cell.setCellStyle(headerStyle);	cell.setCellValue("Project Controls Lead");	
+		cell = header.createCell(8);	cell.setCellStyle(headerStyle);	cell.setCellValue("Permits Lead");	
+		cell = header.createCell(9);	cell.setCellStyle(headerStyle);	cell.setCellValue("Sustainability Manager");	
+		cell = header.createCell(10);	cell.setCellStyle(headerStyle);	cell.setCellValue("Cost Estimating Manager");	
+
+		
+		cell = header.createCell(11);	cell.setCellStyle(headerStyle);	cell.setCellValue("Operating Bureau");	
+		cell = header.createCell(12);	cell.setCellStyle(headerStyle);	cell.setCellValue("Current Status");	
+		cell = header.createCell(13);	cell.setCellStyle(headerStyle);	cell.setCellValue("Current Stage");	
+		cell = header.createCell(14);	cell.setCellStyle(headerStyle);	cell.setCellValue("Consent");	
+		cell = header.createCell(15);	cell.setCellStyle(headerStyle);	cell.setCellValue("DFD");	
+		cell = header.createCell(16);	cell.setCellStyle(headerStyle);	cell.setCellValue("Program");	
+		cell = header.createCell(17);	cell.setCellStyle(headerStyle);	cell.setCellValue("BODR");	
+		cell = header.createCell(18);	cell.setCellStyle(headerStyle);	cell.setCellValue("30%");	
+		cell = header.createCell(19);	cell.setCellStyle(headerStyle);	cell.setCellValue("60%");	
+		cell = header.createCell(20);	cell.setCellStyle(headerStyle);	cell.setCellValue("90%");	
+		cell = header.createCell(21);	cell.setCellStyle(headerStyle);	cell.setCellValue("100%");	
+		cell = header.createCell(22);	cell.setCellStyle(headerStyle);	cell.setCellValue("NTP");	
+		cell = header.createCell(23);	cell.setCellStyle(headerStyle);	cell.setCellValue("Data Date");	
+		cell = header.createCell(24);	cell.setCellStyle(headerStyle);	cell.setCellValue("Current Baseline Date");	
+		cell = header.createCell(25);	cell.setCellStyle(headerStyle);	cell.setCellValue("Current Substantial Completion");	
+		cell = header.createCell(26);	cell.setCellStyle(headerStyle);	cell.setCellValue("Current Final Completion");	
+		cell = header.createCell(27);	cell.setCellStyle(headerStyle);	cell.setCellValue("SC Current Variance");	
+		cell = header.createCell(28);	cell.setCellStyle(headerStyle);	cell.setCellValue("Period Gain/Loss");	
+		cell = header.createCell(29);	cell.setCellStyle(headerStyle);	cell.setCellValue("Original Construction Contract Amount");	
+		cell = header.createCell(30);	cell.setCellStyle(headerStyle);	cell.setCellValue("Current Construction Contract Amount");		
+//		cell = header.createCell(31);	cell.setCellStyle(headerStyle);	cell.setCellValue("SCG Support");	
+		cell = header.createCell(31);	cell.setCellStyle(headerStyle);	cell.setCellValue("Current Comments/ Issue");	
+		cell = header.createCell(32);	cell.setCellStyle(headerStyle);	cell.setCellValue("Comptr. Claim");	
  
 		int rowNum = 1;
 		for (Map.Entry<String, SCGHistoricalTrendEntity> entry : sortedMap.entrySet()) {
@@ -144,36 +149,41 @@ public class SCGExcelView extends AbstractExcelView{
 			cell = row.createCell(4);	setCellValues(entry.getValue(), entry.getValue().getDesignAccountableManager(), style, "");
 			cell = row.createCell(5);	setCellValues(entry.getValue(), entry.getValue().getConstructionAccountableManager(), style, "");
 			cell = row.createCell(6);	setCellValues(entry.getValue(), entry.getValue().getSCGLead(), style, "");
-			cell = row.createCell(7);	setCellValues(entry.getValue(), entry.getValue().getOperatingBureau(), style, "");
-			cell = row.createCell(8);	setCellValues(entry.getValue(), entry.getValue().getCurrentStatus(), style, "");
-			cell = row.createCell(9);	setCellValues(entry.getValue(), entry.getValue().getCurrentStage(), style, "");
-			cell = row.createCell(10);	setCellValues(entry.getValue(), entry.getValue().getConsent(), style, "");
-			cell = row.createCell(11);	setCellValues(entry.getValue(), entry.getValue().getDFD(), style, "");
-			cell = row.createCell(12);	setCellValues(entry.getValue(), entry.getValue().getMasterProgramOld(), style, "");
+			cell = row.createCell(7);	setCellValues(entry.getValue(), entry.getValue().getProjectControlsLead(), style, "");
+			cell = row.createCell(8);	setCellValues(entry.getValue(), entry.getValue().getPermitsLead(), style, "");
+			cell = row.createCell(9);	setCellValues(entry.getValue(), entry.getValue().getSustainabilityManager(), style, "");
+			cell = row.createCell(10);	setCellValues(entry.getValue(), entry.getValue().getCostEstimatingManager(), style, "");
+			
+			cell = row.createCell(11);	setCellValues(entry.getValue(), entry.getValue().getOperatingBureau(), style, "");
+			cell = row.createCell(12);	setCellValues(entry.getValue(), entry.getValue().getCurrentStatus(), style, "");
+			cell = row.createCell(13);	setCellValues(entry.getValue(), entry.getValue().getCurrentStage(), style, "");
+			cell = row.createCell(14);	setCellValues(entry.getValue(), entry.getValue().getConsent(), style, "");
+			cell = row.createCell(15);	setCellValues(entry.getValue(), entry.getValue().getDFD(), style, "");
+			cell = row.createCell(16);	setCellValues(entry.getValue(), entry.getValue().getMasterProgramOld(), style, "");
 
-			cell = row.createCell(13);	setCellValues(entry.getValue(), entry.getValue().getBODR(), workbook.createCellStyle(), "date");
-			cell = row.createCell(14);	setCellValues(entry.getValue(), entry.getValue().getDesign30(), workbook.createCellStyle(), "date");
-			cell = row.createCell(15);	setCellValues(entry.getValue(), entry.getValue().getDesign60(), workbook.createCellStyle(), "date");
-			cell = row.createCell(16);	setCellValues(entry.getValue(), entry.getValue().getDesign90(), workbook.createCellStyle(), "date");
-			cell = row.createCell(17);	setCellValues(entry.getValue(), entry.getValue().getFinalDesignCompleted(), workbook.createCellStyle(), "date");
-			cell = row.createCell(18);	setCellValues(entry.getValue(), entry.getValue().getCurrentNTP(), workbook.createCellStyle(), "date");
-			cell = row.createCell(19);	setCellValues(entry.getValue(), entry.getValue().getDataDate(), workbook.createCellStyle(), "date");
-			cell = row.createCell(20);	setCellValues(entry.getValue(), entry.getValue().getBaselineSC(), workbook.createCellStyle(), "date");
-			cell = row.createCell(21);	setCellValues(entry.getValue(), entry.getValue().getCurrentSC(), workbook.createCellStyle(), "date");
-			cell = row.createCell(22);	setCellValues(entry.getValue(), entry.getValue().getCurrentFC(), workbook.createCellStyle(), "date");
+			cell = row.createCell(17);	setCellValues(entry.getValue(), entry.getValue().getBODR(), workbook.createCellStyle(), "date");
+			cell = row.createCell(18);	setCellValues(entry.getValue(), entry.getValue().getDesign30(), workbook.createCellStyle(), "date");
+			cell = row.createCell(19);	setCellValues(entry.getValue(), entry.getValue().getDesign60(), workbook.createCellStyle(), "date");
+			cell = row.createCell(20);	setCellValues(entry.getValue(), entry.getValue().getDesign90(), workbook.createCellStyle(), "date");
+			cell = row.createCell(21);	setCellValues(entry.getValue(), entry.getValue().getFinalDesignCompleted(), workbook.createCellStyle(), "date");
+			cell = row.createCell(22);	setCellValues(entry.getValue(), entry.getValue().getCurrentNTP(), workbook.createCellStyle(), "date");
+			cell = row.createCell(23);	setCellValues(entry.getValue(), entry.getValue().getDataDate(), workbook.createCellStyle(), "date");
+			cell = row.createCell(24);	setCellValues(entry.getValue(), entry.getValue().getBaselineSC(), workbook.createCellStyle(), "date");
+			cell = row.createCell(25);	setCellValues(entry.getValue(), entry.getValue().getCurrentSC(), workbook.createCellStyle(), "date");
+			cell = row.createCell(26);	setCellValues(entry.getValue(), entry.getValue().getCurrentFC(), workbook.createCellStyle(), "date");
 
-			cell = row.createCell(23);	if(previousMap.get(entry.getValue().getProjectId()) == null)	cell.setCellStyle(style);
+			cell = row.createCell(27);	if(previousMap.get(entry.getValue().getProjectId()) == null)	cell.setCellStyle(style);
 			if(entry.getValue().getBaselineSC() != null && !entry.getValue().getBaselineSC().equals("") && entry.getValue().getCurrentSC() != null && !entry.getValue().getCurrentSC().equals(""))
 				cell.setCellValue(Days.daysBetween(dateFormatter.parseDateTime(entry.getValue().getCurrentSC()), dateFormatter.parseDateTime(entry.getValue().getBaselineSC())).getDays());
-			cell = row.createCell(24);	if(previousMap.get(entry.getValue().getProjectId()) == null)	cell.setCellStyle(style);
+			cell = row.createCell(28);	if(previousMap.get(entry.getValue().getProjectId()) == null)	cell.setCellStyle(style);
 			if(entry.getValue().getSlipGain() != null)
 				cell.setCellValue(entry.getValue().getSlipGain());
-			cell = row.createCell(25);	setCellValues(entry.getValue(), entry.getValue().getOrigConstructionContractAmount(), workbook.createCellStyle(), "currency");
-			cell = row.createCell(26);	setCellValues(entry.getValue(), entry.getValue().getCurrentConstructionContractAmount(), workbook.createCellStyle(), "currency");			
+			cell = row.createCell(29);	setCellValues(entry.getValue(), entry.getValue().getOrigConstructionContractAmount(), workbook.createCellStyle(), "currency");
+			cell = row.createCell(30);	setCellValues(entry.getValue(), entry.getValue().getCurrentConstructionContractAmount(), workbook.createCellStyle(), "currency");			
 
-//			cell = row.createCell(27);	setCellValues(entry.getValue(), entry.getValue().getSCGSupport(), style, "");
-			cell = row.createCell(27);	setCellValues(entry.getValue(), entry.getValue().getComments(), style, "");
-			cell = row.createCell(28);	setCellValues(entry.getValue(), entry.getValue().getClaim(), style, "");
+//			cell = row.createCell(31);	setCellValues(entry.getValue(), entry.getValue().getSCGSupport(), style, "");
+			cell = row.createCell(31);	setCellValues(entry.getValue(), entry.getValue().getComments(), style, "");
+			cell = row.createCell(32);	setCellValues(entry.getValue(), entry.getValue().getClaim(), style, "");
          }
 		
 	}
