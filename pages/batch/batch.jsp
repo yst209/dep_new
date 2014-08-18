@@ -23,7 +23,7 @@
 </spring:hasBindErrors>
 <p>
 <!-- note second way of displaying error messages – by field -->
-<form:form id="form" commandName="batchInfo" method="POST" action="/dep/batch/batchResult">
+<form:form id="form" commandName="batchInfo" method="POST" action="/dep/batch/">
 	<table>
 	<tr>
 		<td>

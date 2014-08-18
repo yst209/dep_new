@@ -115,7 +115,6 @@ public class BatchController
         coordinatorSelectList = new LinkedHashMap<String,String>();
         coordinatorSelectList.put("Alyson", "Alyson");//Back end, Front end
         coordinatorSelectList.put("Byron", "Byron");
-        coordinatorSelectList.put("Daniel", "Daniel");
         coordinatorSelectList.put("Frank", "Frank");
         coordinatorSelectList.put("Rosalina", "Rosalina");
         coordinatorSelectList.put("Vijaya", "Vijaya");
@@ -135,7 +134,9 @@ public class BatchController
 		return modelAndView;
 	}
 	
-    @RequestMapping(value = "/batchResult", method = RequestMethod.POST)
+//	@RequestMapping(value = "/batchResult", method = RequestMethod.POST) 
+//	Removed mapping to /batchResult, so it won't display different path in browser URL even when validation failed.
+    @RequestMapping(method = RequestMethod.POST)
     synchronized public ModelAndView submit(@ModelAttribute("batchInfo") BatchInfo bi, BindingResult result, HttpServletRequest request) throws Exception
 	{
 		logger.info("IP: " + request.getRemoteHost());
