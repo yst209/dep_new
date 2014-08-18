@@ -564,8 +564,10 @@ public class TrendController
 		// color for the last line
 		layer.addDataSet(currentBaselineList, 0xff0000, "Baseline");
 		layer.addDataSet(currentBaselinePlus15List, c.dashLineColor(0xff00ff, Chart.DashLine), "Baseline + 15% Delay");
-		layer.addDataSet(currentForecastList, 0x008800, "Historical Data");
-		layer.addDataSet(currentDashedForecastList, c.dashLineColor(0x008800, Chart.DashLine), "Current Forecast");
+		layer.addDataSet(currentForecastList, 0x008800, "Historical Data").setDataSymbol(Chart.TriangleShape, 5,
+				0x008800, 0x008800);
+		layer.addDataSet(currentDashedForecastList, c.dashLineColor(0x008800, Chart.DashLine), "Current Forecast").setDataSymbol(Chart.SquareShape, 4,
+				0x008800, 0x008800);
 //		layer.addDataSet(currentForecastList, c.dashLineColor(0x3333ff, Chart.DashLine), "varianceList");
 //		layer.addDataSet(comparedBaselineList, c.dashLineColor(0x3333ff, Chart.DashLine), "comparedBaselineList");
 //		layer.addDataSet(comparedForecastList, c.dashLineColor(0x3333ff, Chart.DashLine), "comparedForecastList");
