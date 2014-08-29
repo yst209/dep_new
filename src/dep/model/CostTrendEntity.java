@@ -5,9 +5,12 @@ package dep.model;
 public class CostTrendEntity {
 	private Long dataPeriod;
 	private Long budget;
+	private Long amountSpent;
 	private Long EAC;
 	private Long adjustedContractPrice;
 	private Long currentContractForecast;
+	private Double spentPercentage;
+	private Double physicalPercentage;
 	
 	public Long getDataPeriod() {
 		return dataPeriod;
@@ -20,6 +23,12 @@ public class CostTrendEntity {
 	}
 	public void setBudget(Long budget) {
 		this.budget = budget;
+	}
+	public Long getAmountSpent() {
+		return amountSpent;
+	}
+	public void setAmountSpent(Long amountSpent) {
+		this.amountSpent = amountSpent;
 	}
 	public Long getEAC() {
 		return EAC;
@@ -39,6 +48,16 @@ public class CostTrendEntity {
 	public void setCurrentContractForecast(Long currentContractForecast) {
 		this.currentContractForecast = currentContractForecast;
 	}
-	
-
+	public Double getSpentPercentage() {
+		return spentPercentage;
+	}
+	public void setSpentPercentage(Double spentPercentage) {
+		this.spentPercentage = spentPercentage;
+	}
+	public Double getPhysicalPercentage() {
+		return physicalPercentage;
+	}
+	public void setPhysicalPercentage(Double physicalPercentage) {
+		this.physicalPercentage = physicalPercentage;
+	}
 }

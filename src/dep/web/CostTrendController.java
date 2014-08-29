@@ -161,10 +161,9 @@ public class CostTrendController
 			projectId = ti.getProjectId();
 			contractType = ti.getContractType();
 	
-			System.out.println("Selected projectId: " + projectId + ", contractType: " + contractType);
+//			System.out.println("Selected projectId: " + projectId + ", contractType: " + contractType + ", map.get(projectId): " + map.get(projectId).getCurrentStage());
 		 	
-		 	
-		 	List<CostTrendEntity> list = dao.getBudgetContractEAC(projectId, contractType);
+		 	List<CostTrendEntity> list = dao.getBudgetContractEAC(map.get(projectId), contractType);
 		 	
 //		 	for(CostTrendEntity entity : list)
 //		 	{
@@ -188,6 +187,11 @@ public class CostTrendController
 		double[] EACList = new double[list.size()];//Baseline + 15% Delay
 		double[] adjustedContractPriceList = new double[list.size()];
 		double[] currentContractForecastList = new double[list.size()];
+	
+		double[] spentPercentageList = new double[list.size()];
+		double[] physicalPercentageList = new double[list.size()];
+
+		
 		String[] labelList = new String[list.size()];
 		double lowest=100000000000.0, highest=0.0;
 
@@ -197,6 +201,8 @@ public class CostTrendController
     			EACList[i] = list.get(i).getEAC().doubleValue();
     			adjustedContractPriceList[i] = list.get(i).getAdjustedContractPrice().doubleValue();
     			currentContractForecastList[i] = list.get(i).getCurrentContractForecast().doubleValue();
+    			spentPercentageList[i] = list.get(i).getSpentPercentage().doubleValue() * 100;
+    			physicalPercentageList[i] = list.get(i).getPhysicalPercentage().doubleValue() * 100;
         		labelList[i] = dataPeriodFormatter.parseDateTime(list.get(i).getDataPeriod().toString()).monthOfYear().getAsShortText()+ " " +list.get(i).getDataPeriod().toString().substring(2,4);
 
         		if(budgetList[i]<lowest)
@@ -226,7 +232,7 @@ public class CostTrendController
 
 		// Set the plotarea at (55, 58) and of size 520 x 195 pixels, with white background.
 		// Turn on both horizontal and vertical grid lines with light grey color (0xcccccc)
-		c.setPlotArea(100, 80, 800, 400, 0xffffff, -1, -1, 0xcccccc, 0xcccccc);
+		c.setPlotArea(100, 90, 780, 400, 0xffffff, -1, -1, 0xcccccc, 0xcccccc);
 
 		// Add a legend box at (50, 30) (top of the chart) with horizontal layout. Use 9 pts
 		// Arial Bold font. Set the background and border color to Transparent.
@@ -264,10 +270,33 @@ public class CostTrendController
 		
 		// Add the three data sets to the line layer. For demo purpose, we use a dash line
 		// color for the last line
-		layer.addDataSet(budgetList, 0x3333ff, "Budget");
-		layer.addDataSet(EACList, 0xff0000, "EAC");
-		layer.addDataSet(adjustedContractPriceList, 0xff00ff, "Adjusted Contract Price(Orig + RCO)");
-		layer.addDataSet(currentContractForecastList, 0x008800, "Current Contract Forecast(Orig + RCO + PCO)");
+		layer.addDataSet(budgetList, 0x1F77B4, "Budget");
+		layer.addDataSet(EACList, 0xFF7F0E, "EAC").setDataSymbol(Chart.CircleShape, 4,
+				0xFF7F0E, 0xFF7F0E);
+		layer.addDataSet(adjustedContractPriceList, 0x2CA02C, "Adjusted Contract Price(Orig + RCO)").setDataSymbol(Chart.TriangleShape, 5,
+				0x2CA02C, 0x2CA02C);
+		layer.addDataSet(currentContractForecastList, 0xD62728, "Current Contract Forecast(Orig + RCO + PCO)").setDataSymbol(Chart.SquareShape, 6,
+				0xD62728, 0xD62728);
+		
+//		System.out.println("contractType: " + contractType);
+		if(!contractType.equals("K"))
+		{
+			// Add a line layer to the chart
+			LineLayer layer2 = c.addLineLayer2();
+			layer2.setLineWidth(3);
+			layer2.setUseYAxis2();
+			// Add the pareto line using deep blue (0000ff) as the color, with circle symbols
+			layer2.addDataSet(spentPercentageList, c.dashLineColor(0xAD8BC9, Chart.DashLine), "Lead " + contractTypeSelectList.get(contractType) + " Contract Current Phase Spent %").setDataSymbol(Chart.CircleShape, 5,
+					0xAD8BC9, 0xAD8BC9);//66ff66 light green
+			layer2.addDataSet(physicalPercentageList, c.dashLineColor(0xA8786E, Chart.DashLine), "Lead " + contractTypeSelectList.get(contractType) + " Contract Current Phase Physical % Complete").setDataSymbol(Chart.SquareShape, 6,
+					0xA8786E, 0xA8786E);//66ff66 light green
+	
+			// Tool tip for the line layer
+			layer2.setHTMLImageMap("", "", "title='{xLabel}: {value}%'");
+			c.yAxis2().setTitle("Percentage");
+			c.yAxis2().setLabelFormat("{value}%");
+			c.yAxis2().setLinearScale(0, 100, 20);
+		}
 		
 		HttpServletRequest request = 
 				((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())

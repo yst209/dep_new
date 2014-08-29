@@ -1,4 +1,4 @@
-select [Project_ID], [Project_Name], [Portfolio_Manager]	  
+select [Project_ID], [Project_Name], [Portfolio_Manager], [Current_Stage] 
 from P6_Historical_Trend	  
 where P6_Orig_Proj_id is null 	  
 And Current_Status = 'Active'	  

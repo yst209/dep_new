@@ -83,10 +83,9 @@ public class DatabaseDao {
 
 		public Long getLatestDataDate() {
 			String SQL = "SELECT max(Data_Period) as Latest_Data_Period FROM P6_Historical_Trend";
-			return jdbcTemplate.queryForLong(SQL);
+			return jdbcTemplate.queryForObject(SQL, Long.class);
 		}
 
-		@SuppressWarnings("unchecked")
 		public List<CobraCostDataEntity> getCobraCostData() {
 			//Only check the most current data which is from Latest_Data_Period
 			String SQL = "SELECT * FROM [ProjectControl].[dbo].[Cobra_CostData_View]";
@@ -116,7 +115,6 @@ public class DatabaseDao {
 			return cobraCostDataList;
 		}
 
-		@SuppressWarnings("unchecked")
 		public Map<String, String> getCobraStatusDate() {
 			String SQL = "SELECT [PROJECT], max([STATUSDATE]) as STATUSDATE " +
 					" FROM [ProjectControl].[dbo].[Cobra_CostData_View] " +
@@ -264,7 +262,6 @@ public class DatabaseDao {
 			return SCGLogList;
 		}
 		
-		@SuppressWarnings("unchecked")
 		public Map<String, Long> getCurrCont(String dataPeriod) {
 			//Only check the most current data which is from Latest_Data_Period
 			String SQL = "SELECT [Project], SUM(Value) as [Current_Construction_Contract_Amount] " +
@@ -284,7 +281,6 @@ public class DatabaseDao {
 			return map;
 		}
 		
-		@SuppressWarnings("unchecked")
 		public Map<String, Long> getOrigCont(String dataPeriod) {
 			//Only check the most current data which is from Latest_Data_Period
 			String SQL = "SELECT [Project], SUM(Value) as [Orig_Construction_Contract_Amount] " +
@@ -306,7 +302,7 @@ public class DatabaseDao {
 		
 		public Long getLatestSCGLogDataPeriod() {
 			String SQL = "SELECT max(Data_Period) as Latest_Data_Period FROM SCG_Log";
-			return jdbcTemplate.queryForLong(SQL);
+			return jdbcTemplate.queryForObject(SQL, Long.class);
 		}
 		
 		public void updateSCGLog(SCGLogEntity project) {
@@ -596,7 +592,7 @@ public class DatabaseDao {
 
 		public Long getLatestEstimateDataPeriod() {
 			String SQL = "SELECT max(Data_Period) as Latest_Data_Period FROM Estimate_Log";
-			return jdbcTemplate.queryForLong(SQL);
+			return jdbcTemplate.queryForObject(SQL, Long.class);
 		}
 
 		public void updateEstimate(EstimateEntity project) {
@@ -776,8 +772,6 @@ public class DatabaseDao {
             return arrayContent;
 		}
 		
-
-		@SuppressWarnings("unchecked")
 		public List<String> getActiveManagerList(String managerType, String masterProgram) {
 			String SQL="";
 			
@@ -813,8 +807,8 @@ public class DatabaseDao {
 		
 		
 
-		public List<CostTrendEntity> getBudgetContractEAC(String projectId, String contractType) {
-			String SQL="";
+		public List<CostTrendEntity> getBudgetContractEAC(HistoricalTrendEntity project, String contractType) {
+			String SQL="", activityId = "";
 		
 			
 			BufferedReader br;
@@ -828,6 +822,7 @@ public class DatabaseDao {
 			while( (line = br.readLine()) != null)
 			{
 				SQL+=line;
+//				System.out.println(line);
 //				projectList.add(line);
 			}
 			
@@ -837,10 +832,31 @@ public class DatabaseDao {
 				e.printStackTrace();
 			}			
 			
-			SQL = SQL.replaceAll("@projectId", projectId);
-			SQL = SQL.replaceAll("@contractType", contractType);
+//			if(project.getCurrentStage().equals("DesPro") || project.getCurrentStage().equals("P") || project.getCurrentStage().equals("Des") || project.getCurrentStage().equals("ConPro"))
+//				activityId = project.getProjectId() + "."  + "."  + ".";
+//			else if(project.getCurrentStage().equals("Con") || project.getCurrentStage().equals("SC") || project.getCurrentStage().equals("FC"))
+//				activityId = project.getProjectId() + "."  + "."  + ".";
 			
-//			System.out.println("getBudgetContractEAC SQL: " + SQL);
+			if(project.getCurrentStage().equals("DesPro"))
+				activityId = project.getProjectId() + "."  + "25"  + "." + contractType;
+			else if(project.getCurrentStage().equals("P"))
+				activityId = project.getProjectId() + "."  + "10"  + "." + contractType;
+			else if(project.getCurrentStage().equals("Des"))
+				activityId = project.getProjectId() + "."  + "30"  + "." + contractType;
+			else if(project.getCurrentStage().equals("ConPro"))
+				activityId = project.getProjectId() + "."  + "40"  + "." + contractType;
+			else if(project.getCurrentStage().equals("Con") || project.getCurrentStage().equals("SC") || project.getCurrentStage().equals("FC"))
+				activityId = project.getProjectId() + "."  + "50"  + "." + contractType;
+			
+			System.out.println("activityId: " + activityId);
+			System.out.println("getCurrentStage: " + project.getCurrentStage());
+			
+			SQL = SQL.replaceAll("@projectId", project.getProjectId());
+			SQL = SQL.replaceAll("@contractType", contractType);
+			SQL = SQL.replaceAll("@activityId", activityId);
+			//26W-18.50.C
+			
+			System.out.println("getBudgetContractEAC SQL: " + SQL);
 			
 			
 			List<CostTrendEntity> list = new ArrayList<CostTrendEntity>();
@@ -851,6 +867,8 @@ public class DatabaseDao {
 				CostTrendEntity entity = new CostTrendEntity();
 				
 				entity.setDataPeriod(Long.parseLong(row.get("Data_Period").toString().split("\\.")[0]));
+				if(row.get("Amount_Spent") != null)
+					entity.setAmountSpent(Long.parseLong(row.get("Amount_Spent").toString().split("\\.")[0]));
 				if(row.get("EAC") != null)
 					entity.setEAC(Long.parseLong(row.get("EAC").toString().split("\\.")[0]));
 				if(row.get("Budget") != null)
@@ -859,7 +877,10 @@ public class DatabaseDao {
 					entity.setCurrentContractForecast(Long.parseLong(row.get("Current_Contract_Forecast").toString().split("\\.")[0]));
 				if(row.get("Adjusted_Contract_Price") != null)
 					entity.setAdjustedContractPrice(Long.parseLong(row.get("Adjusted_Contract_Price").toString().split("\\.")[0]));
-
+				if(row.get("Spent_Percentage") != null)
+					entity.setSpentPercentage(((BigDecimal)row.get("Spent_Percentage")).doubleValue());
+				if(row.get("phys_complete_pct") != null)
+					entity.setPhysicalPercentage(new BigDecimal((Double)row.get("phys_complete_pct")).doubleValue());// java.lang.Double cannot be cast to java.math.BigDecimal
 				list.add(entity);
 			}
 			
@@ -900,6 +921,7 @@ public class DatabaseDao {
 				entity.setProjectId((String)(row.get("Project_ID")));
 				entity.setProjectName((String)(row.get("Project_Name")));
 				entity.setPortfolioManager((String)(row.get("Portfolio_Manager")));
+				entity.setCurrentStage((String)(row.get("Current_Stage")));
 				
 				list.add(entity);
 			}
